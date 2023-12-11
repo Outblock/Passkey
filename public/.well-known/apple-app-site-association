@@ -3,12 +3,12 @@
  		"apps": [], 
 		"details": [
 			{
-				"appID": "3U764PNW3R.io.outblock.passkey-test",
+				"appID": "C7CT739SU9.io.outblock.passkey-test",
             	"paths": [ "*" ]
         	}
 		],
 		"webcredentials": {
-			"apps": [ "3U764PNW3R.io.outblock.passkey-test" ]
+			"apps": [ "C7CT739SU9.io.outblock.passkey-test" ]
 		}
 	}
 }
