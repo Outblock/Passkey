@@ -6,9 +6,9 @@
 				"appID": "C7CT739SU9.io.outblock.passkey-test",
             	"paths": [ "*" ]
         	}
-		],
-		"webcredentials": {
-			"apps": [ "C7CT739SU9.io.outblock.passkey-test" ]
-		}
+		]
+	},
+	"webcredentials": {
+		"apps": [ "C7CT739SU9.io.outblock.passkey-test" ]
 	}
 }
