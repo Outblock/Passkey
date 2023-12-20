@@ -5,6 +5,13 @@ import { Button } from "@nextui-org/react";
 import { FaCircleUser } from "react-icons/fa6";
 import { FaRegIdBadge } from "react-icons/fa6";
 import { getRandomBytes, base64DecodeURL } from "../utils";
+import {
+  decodeAttestationOptions,
+  encodeAttestationResponse,
+  decodeAssertionOptions,
+  encodeAssertionResponse
+} from "webauthnjs-helper";
+
 // import { initWasm, TW, KeyStore } from "@trustwallet/wallet-core";
 // const core = await initWasm();
 
@@ -40,22 +47,27 @@ const get = async () => {
 
   // const wallet = HDWallet.createWithEntropy(data, "")
   console.log("wallet.mnemonic =>", mnemonic1)
-  
+  const test = decodeAssertionOptions(result)
+  console.log("wallet.test =>", test)
 };
 
 const create = async () => {
-  
-  
-
 
   const result = await navigator.credentials.create({
     publicKey: {
       challenge: getRandomBytes(20),
-      rpId: window.location.hostname,
+      rpId: {
+        name: window.location.hostname
+      },
       user: {
         id: getRandomBytes(16),
         name: "Test web",
       },
+      pubKeyCredParams: [
+        {
+          "type": "public-key",
+          "alg": -7
+        },]
     },
   });
   console.log("result ==>", result);
