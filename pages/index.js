@@ -4,20 +4,51 @@ import styles from "../styles/Home.module.css";
 import { Button } from "@nextui-org/react";
 import { FaCircleUser } from "react-icons/fa6";
 import { FaRegIdBadge } from "react-icons/fa6";
-import { getRandomBytes } from "../utils";
+import { getRandomBytes, base64DecodeURL } from "../utils";
+// import { initWasm, TW, KeyStore } from "@trustwallet/wallet-core";
+// const core = await initWasm();
+
+const bip39 = require('bip39')
+
+const HDWallet = require('ethereum-hdwallet')
 
 const get = async () => {
-  let result = await navigator.credentials.get({
+  console.log("wallet.get")
+
+  // const data = base64DecodeURL("5R9uuqhjAmWP6kVb2w9TagcUoHA")
+  
+  // const wallet = HDWallet.fromSeed(data)
+
+  // const mnemonic = bip39.entropyToMnemonic(data)
+
+  // const { CoinType, HexCoding, HDWallet, AnyAddress } = core;
+
+  // const wallet = HDWallet.createWithEntropy(data, "")
+  // console.log("wallet.mnemonic =>", mnemonic)
+
+  const result = await navigator.credentials.get({
     publicKey: {
       challenge: getRandomBytes(20),
       rpId: window.location.hostname,
     },
   });
   console.log("result ==>", result);
+
+  const mnemonic1 = bip39.entropyToMnemonic(result.rawId)
+
+  // const { CoinType, HexCoding, HDWallet, AnyAddress } = core;
+
+  // const wallet = HDWallet.createWithEntropy(data, "")
+  console.log("wallet.mnemonic =>", mnemonic1)
+  
 };
 
 const create = async () => {
-  let result = await navigator.credentials.create({
+  
+  
+
+
+  const result = await navigator.credentials.create({
     publicKey: {
       challenge: getRandomBytes(20),
       rpId: window.location.hostname,
