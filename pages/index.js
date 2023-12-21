@@ -5,12 +5,8 @@ import { Button } from "@nextui-org/react";
 import { FaCircleUser } from "react-icons/fa6";
 import { FaRegIdBadge } from "react-icons/fa6";
 import { getRandomBytes, base64DecodeURL } from "../utils";
-import {
-  decodeAttestationOptions,
-  encodeAttestationResponse,
-  decodeAssertionOptions,
-  encodeAssertionResponse
-} from "webauthnjs-helper";
+import { decodeAuthenticatorData, decodeClientDataJSON } from "../modules/WebAuthnDecoder"
+import { encodeArray } from "../modules/base64"
 
 // import { initWasm, TW, KeyStore } from "@trustwallet/wallet-core";
 // const core = await initWasm();
@@ -41,14 +37,21 @@ const get = async () => {
   });
   console.log("result ==>", result);
 
-  const mnemonic1 = bip39.entropyToMnemonic(result.rawId)
+  const mnemonic1 = bip39.entropyToMnemonic(result.response.userHandle)
+
+  console.log("User Handle ==>", encodeArray(result.response.userHandle))
 
   // const { CoinType, HexCoding, HDWallet, AnyAddress } = core;
 
   // const wallet = HDWallet.createWithEntropy(data, "")
   console.log("wallet.mnemonic =>", mnemonic1)
-  const test = decodeAssertionOptions(result)
+  const json = decodeClientDataJSON(result.response.clientDataJSON)
+  console.log("clientDataJSON =>", json)
+  const test = decodeAuthenticatorData(result.response.authenticatorData)
   console.log("wallet.test =>", test)
+
+
+
 };
 
 const create = async () => {
@@ -56,18 +59,24 @@ const create = async () => {
   const result = await navigator.credentials.create({
     publicKey: {
       challenge: getRandomBytes(20),
-      rpId: {
+      rp: {
         name: window.location.hostname
       },
       user: {
         id: getRandomBytes(16),
         name: "Test web",
+        displayName: "Test displayName"
       },
       pubKeyCredParams: [
         {
           "type": "public-key",
           "alg": -7
-        },]
+        },
+        {
+          "type": "public-key",
+          "alg": -257
+        }
+      ]
     },
   });
   console.log("result ==>", result);
