@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "next dev && sh pre-setup.sh",
+    "build": "sh pre-setup.sh && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -14,7 +14,6 @@
     "bip39": "^3.1.0",
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",
-    "ethereum-hdwallet": "^0.1.2",
     "framer-motion": "^10.16.16",
     "next": "13.4.19",
     "react": "18.2.0",
