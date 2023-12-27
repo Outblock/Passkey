@@ -10,13 +10,22 @@ const nextConfig = {
       };  
     }
 
-    config.output.webassemblyModuleFilename =
-    isServer && !dev
-      ? '../static/wasm/[modulehash].wasm'
-      : 'static/wasm/[modulehash].wasm'
+  //   config.output.webassemblyModuleFilename =
+  //   isServer && !dev
+  //     ? '../static/wasm/[modulehash].wasm'
+  //     : 'static/wasm/[modulehash].wasm'
 
-  // Since Webpack 5 doesn't enable WebAssembly by default, we should do it manually
-  config.experiments = { ...config.experiments, asyncWebAssembly: true }
+  // // Since Webpack 5 doesn't enable WebAssembly by default, we should do it manually
+  // config.experiments = { ...config.experiments, asyncWebAssembly: true }
+
+  const experiments = config.experiments || {};
+  config.experiments = {...experiments, asyncWebAssembly: true};
+  config.output.assetModuleFilename = `static/[hash][ext]`;
+  config.output.publicPath = `/_next/`;
+  config.module.rules.push({
+    test: /\.wasm/,
+    type: 'asset/resource',
+  })
 
     return config;
   },

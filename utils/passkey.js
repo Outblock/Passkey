@@ -1,7 +1,8 @@
-import { getRandomBytes, base64DecodeURL } from "../utils";
+import { getRandomBytes, base64DecodeURL } from ".";
 import { decodeAuthenticatorData, decodeClientDataJSON } from "../modules/WebAuthnDecoder"
 import { encodeArray } from "../modules/base64"
 import { initWasm } from "@trustwallet/wallet-core";
+// import WalletCore from "../wallet-core.wasm";
 
 const path = "m/44'/539'/0'/0/0"
 

@@ -8,7 +8,12 @@ import {
   FaHashtag,
   FaArrowDownWideShort,
 } from "react-icons/fa6";
-import { createPasskey, getPasskey, getPKfromLogin, getPKfromRegister } from "./passkey";
+import {
+  createPasskey,
+  getPasskey,
+  getPKfromLogin,
+  getPKfromRegister,
+} from "../utils/passkey";
 import { useEffect, useState } from "react";
 import { TbMathMax } from "react-icons/tb";
 
@@ -36,10 +41,10 @@ export default function Home() {
       setKeyInfo(result);
     };
 
-    console.log("registerInfo ==>", registerInfo)
+    console.log("registerInfo ==>", registerInfo);
 
     if (registerInfo && registerInfo.userId) {
-      console.log("registerInfo 1111")
+      console.log("registerInfo 1111");
       decodeRegisterInfo();
     }
   }, [registerInfo]);
@@ -53,11 +58,10 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <Card className="w-1/3 bottom-3">
+        <Card className="max-w-fit bottom-3">
           <CardBody className="flex flex-col space-y-4">
             <div className="flex items-center gap-4">
-              {" "}
-              <FaKey className="text-2xl" />{" "}
+              <FaKey className="text-2xl" />
               <h1 className="text-3xl font-bold text-gray-300">
                 Passkey on Flow
               </h1>
@@ -71,7 +75,9 @@ export default function Home() {
               variant="solid"
               // startContent={<FaCircleUser />}
               onPress={async () =>
-                setRegisterInfo( await createPasskey("Test Name", "Test Display Name"))
+                setRegisterInfo(
+                  await createPasskey("Test Name", "Test Display Name")
+                )
               }
             >
               Register
@@ -100,7 +106,6 @@ export default function Home() {
               <Divider />
 
               <div class="grid grid-cols-4 gap-4 overflow-auto">
-                
                 <h6> Mnemonic </h6>
                 <div class="col-span-3">
                   <Code className="whitespace-normal">{keyInfo.mnemonic}</Code>
@@ -120,20 +125,22 @@ export default function Home() {
 
                 <h6> Public Key </h6>
                 <div class="col-span-3 ">
-                  <Code className="whitespace-normal w-full">{keyInfo.pubK}</Code>
+                  <Code className="whitespace-normal w-full">
+                    {keyInfo.pubK}
+                  </Code>
                 </div>
 
-                <div className= "col-span-3 justify-self-end">
-                <Chip 
-                startContent={<TbMathMax/>}
-                variant="faded">
-                  Secp256r1
-                </Chip>
+                <div className="col-span-3 justify-self-end">
+                  <Chip startContent={<TbMathMax />} variant="faded">
+                    Secp256r1
+                  </Chip>
                 </div>
 
-                <Chip 
-                startContent={<FaHashtag/>}
-                variant="faded">
+                <Chip
+                  // className= "row-end-1"
+                  startContent={<FaHashtag />}
+                  variant="faded"
+                >
                   SHA-256
                 </Chip>
               </div>

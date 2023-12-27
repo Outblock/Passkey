@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev && sh pre-setup.sh",
-    "build": "sh pre-setup.sh && next build",
+    "dev": "next dev && sh post-build.sh",
+    "build": " next build && sh post-build.sh",
     "start": "next start",
     "lint": "next lint"
   },
