@@ -1,6 +1,6 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { Button, Card, CardBody, Code, Divider, Chip } from "@nextui-org/react";
+import { Button, Card, CardBody, Code, Divider, Chip, Input } from "@nextui-org/react";
 import {
   FaRegIdBadge,
   FaCircleUser,
@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { TbMathMax } from "react-icons/tb";
 
 export default function Home() {
+  const [username, setUsername] = useState("");
   const [registerInfo, setRegisterInfo] = useState(null);
   const [loginInfo, setLoginInfo] = useState(null);
   const [keyInfo, setKeyInfo] = useState(null);
@@ -60,28 +61,38 @@ export default function Home() {
       <main className={styles.main}>
         <div className="w-1/3 max-w-lg">
           <Card className="bottom-3">
-            <CardBody className="flex flex-col space-y-4">
+            <CardBody className="flex flex-col space-y-4 p-8">
               <div className="flex items-center gap-4">
                 <FaKey className="text-2xl" />
                 <h1 className="text-3xl font-bold text-gray-300">
                   Passkey on Flow
                 </h1>
               </div>
-              <h1 className="text-1xl text-gray-500">
+              <h1 className="text-1xl text-gray-500 pb-3">
                 This is a Demo for showing the passkey on flow blockchain.
               </h1>
+
+              <Input isClearable type="text" label="Username" value={username} onValueChange={setUsername}/>
+
               <Button
                 color="primary"
                 variant="solid"
                 // startContent={<FaCircleUser />}
                 onPress={async () =>
                   setRegisterInfo(
-                    await createPasskey("Test Name", "Test Display Name")
+                    await createPasskey(username, username)
                   )
                 }
               >
                 Register
               </Button>
+
+              <div className="flex items-center gap-6 justify-center">
+              <Divider className="w-5/12"/>
+                <p className="text-gray-500">or</p>
+              <Divider className="w-5/12"/>
+              </div>
+
               <Button
                 color="default"
                 variant="solid"
