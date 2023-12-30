@@ -54,7 +54,7 @@ const getPKfromLogin = async (result) => {
     // console.log("clientDataJSON =>", json)
     // const test = decodeAuthenticatorData(result.response.authenticatorData)
     
-    return { mnemonic: wallet.mnemonic(), pk: uint8Array2Hex(pk.data()), pubK: uint8Array2Hex(pubk) }
+    return { mnemonic: wallet.mnemonic(), pk: uint8Array2Hex(pk.data()), pubK: uint8Array2Hex(pubk).replace(/^04/, "")}
 }
 
 const getPKfromRegister = async ({userId, result}) => {
@@ -66,7 +66,7 @@ const getPKfromRegister = async ({userId, result}) => {
     const wallet = HDWallet.createWithEntropy(userId, "")
     const pk = wallet.getKeyByCurve(Curve.nist256p1, path)
     const pubk = pk.getPublicKeyNist256p1().uncompressed().data()
-    return { mnemonic: wallet.mnemonic(), pk: uint8Array2Hex(pk.data()), pubK: uint8Array2Hex(pubk) }
+    return { mnemonic: wallet.mnemonic(), pk: uint8Array2Hex(pk.data()), pubK: uint8Array2Hex(pubk).replace(/^04/, "") }
 }
 
 const uint8Array2Hex = (input) => {

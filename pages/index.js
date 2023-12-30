@@ -1,12 +1,14 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { Button, Card, CardBody, Code, Divider, Chip, Input } from "@nextui-org/react";
 import {
-  FaRegIdBadge,
-  FaCircleUser,
+  Button,
+  Card,
+  CardBody,
+  Divider,
+  Input,
+} from "@nextui-org/react";
+import {
   FaKey,
-  FaHashtag,
-  FaArrowDownWideShort,
 } from "react-icons/fa6";
 import {
   createPasskey,
@@ -15,19 +17,35 @@ import {
   getPKfromRegister,
 } from "../utils/passkey";
 import { useEffect, useState } from "react";
-import { TbMathMax } from "react-icons/tb";
+import KeyInfoCard from "../components/KeyInfoCard";
+import ProgressBar from "../components/ProgressBar";
 
 export default function Home() {
+  const network = 'testnet'
   const [username, setUsername] = useState("");
   const [registerInfo, setRegisterInfo] = useState(null);
   const [loginInfo, setLoginInfo] = useState(null);
   const [keyInfo, setKeyInfo] = useState(null);
+  const [txId, setTxId] = useState(null);
 
   useEffect(() => {
     const decodeLoginInfo = async () => {
       const result = await getPKfromLogin(loginInfo);
       console.log(result);
       setKeyInfo(result);
+
+      const response = await fetch("/api/getAddress", {
+        method: "POST",
+        body: JSON.stringify({
+          publicKey: result.pubK,
+          network: network,
+          apikey: process.env.apikey,
+        }),
+      });
+
+      const body = await response.json()
+      console.log('body ==>', body)
+
     };
 
     if (loginInfo) {
@@ -40,10 +58,22 @@ export default function Home() {
       const result = await getPKfromRegister(registerInfo);
       console.log(result);
       setKeyInfo(result);
+
+      const response = await fetch("/api/createAddress", {
+        method: "POST",
+        body: JSON.stringify({
+          publicKey: result.pubK,
+          network: network,
+          apikey: process.env.apikey,
+        }),
+      });
+      const body = await response.json()
+      if (body.txId) {
+        setTxId(body.txId)
+      }
+      console.log("txId =>", body);
+      console.log("txId =>", body.txId);
     };
-
-    console.log("registerInfo ==>", registerInfo);
-
     if (registerInfo && registerInfo.userId) {
       console.log("registerInfo 1111");
       decodeRegisterInfo();
@@ -59,8 +89,8 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <div className="w-1/3 max-w-lg">
-          <Card className="bottom-3">
+        <div className="w-1/3 max-w-lg flex flex-col gap-4">
+          <Card>
             <CardBody className="flex flex-col space-y-4 p-8">
               <div className="flex items-center gap-4">
                 <FaKey className="text-2xl" />
@@ -72,25 +102,30 @@ export default function Home() {
                 This is a Demo for showing the passkey on flow blockchain.
               </h1>
 
-              <Input isClearable type="text" label="Username" value={username} onValueChange={setUsername}/>
+              <Input
+                isClearable
+                type="text"
+                label="Username"
+                value={username}
+                description="Create your username for passkey"
+                onValueChange={setUsername}
+              />
 
               <Button
                 color="primary"
                 variant="solid"
                 // startContent={<FaCircleUser />}
                 onPress={async () =>
-                  setRegisterInfo(
-                    await createPasskey(username, username)
-                  )
+                  setRegisterInfo(await createPasskey(username, username))
                 }
               >
                 Register
               </Button>
 
               <div className="flex items-center gap-6 justify-center">
-              <Divider className="w-5/12"/>
+                <Divider className="w-5/12" />
                 <p className="text-gray-500">or</p>
-              <Divider className="w-5/12"/>
+                <Divider className="w-5/12" />
               </div>
 
               <Button
@@ -106,60 +141,8 @@ export default function Home() {
               </Button>
             </CardBody>
           </Card>
-
-          {keyInfo && (
-            <Card>
-              <CardBody className="flex flex-col space-y-4">
-                <div className="flex items-center gap-4">
-                  <FaArrowDownWideShort className="text-2xl" />
-                  <h1 className="text-2xl font-bold text-gray-300"> Result </h1>
-                </div>
-                <Divider />
-
-                <div className="grid grid-cols-4 gap-4 overflow-auto">
-                  <h6> Mnemonic </h6>
-                  <div className="col-span-3">
-                    <Code className="whitespace-normal">
-                      {keyInfo.mnemonic}
-                    </Code>
-                  </div>
-
-                  <h6> BIP44 Path </h6>
-                  <div className="col-span-3">
-                    <Code className="whitespace-normal w-full">
-                      m/44&apos;/539&apos;/0&apos;/0/0
-                    </Code>
-                  </div>
-
-                  <h6> Private Key </h6>
-                  <div className="col-span-3 place-self-auto h-auto min-h-fit">
-                    <Code className="whitespace-normal w-full">
-                      {keyInfo.pk}
-                    </Code>
-                  </div>
-
-                  <h6> Public Key </h6>
-                  <div className="col-span-3 ">
-                    <Code className="whitespace-normal w-full">
-                      {keyInfo.pubK}
-                    </Code>
-                  </div>
-
-                  <div className="col-span-4 justify-self-end">
-                    <div className="flex justify-self-end gap-4">
-                      <Chip startContent={<TbMathMax />} variant="faded">
-                        Secp256r1
-                      </Chip>
-
-                      <Chip startContent={<FaHashtag />} variant="faded">
-                        SHA-256
-                      </Chip>
-                    </div>
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
-          )}
+          { txId && <ProgressBar txId={txId} network={network}/> }
+          {keyInfo && <KeyInfoCard keyInfo={keyInfo} />}
         </div>
       </main>
     </div>

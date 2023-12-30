@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.2.9",
+    "@onflow/fcl": "^1.9.0",
     "@trustwallet/wallet-core": "4.0.13",
     "bip39": "^3.1.0",
+    "dotenv": "^16.3.1",
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",
     "framer-motion": "^10.16.16",
