@@ -2,7 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   env: {
-    apikey: process.env.apikey
+    apikey: process.env.apikey,
+    network: process.env.network
   },
   webpack(config, { nextRuntime, isServer, dev }) {
     // as of Next.js latest versions, the nextRuntime is preferred over `isServer`, because of edge-runtime
