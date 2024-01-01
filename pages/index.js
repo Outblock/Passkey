@@ -89,9 +89,9 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <div className="w-1/3 max-w-lg flex flex-col gap-4">
+        <div className="min-w-1/3 max-w-lg flex flex-col gap-4">
           <Card>
-            <CardBody className="flex flex-col space-y-4 p-8">
+            <CardBody className="flex flex-col space-y-4 p-6">
               <div className="flex items-center gap-4">
                 <FaKey className="text-2xl" />
                 <h1 className="text-3xl font-bold text-gray-300">

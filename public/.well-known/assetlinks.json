@@ -1,0 +1,15 @@
+[
+    {
+      "relation" : [
+        "delegate_permission/common.handle_all_urls",
+        "delegate_permission/common.get_login_creds"
+      ],
+      "target" : {
+        "namespace" : "android_app",
+        "package_name" : "dev.lilico.testpasskey",
+        "sha256_cert_fingerprints" : [
+            "92:A7:48:77:3B:67:BE:9F:BA:1F:AA:FC:1A:B4:CF:C8:AA:36:55:73:22:A5:2E:38:0E:9D:FC:97:E2:6D:52:AE"
+        ]
+      }
+    }
+  ]

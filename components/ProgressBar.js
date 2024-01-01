@@ -5,7 +5,7 @@ const ProgressBar = ({txId, network}) => {
   const url = `https://${network === 'testnet' ? 'testnet.' : ''}flowdiver.io/tx/${txId}`
   return (
     <Card>
-      <CardBody className="flex flex-col space-y-4 px-8 py-4">
+      <CardBody className="flex flex-col space-y-4 p-6">
         <div className="flex items-center gap-4">
           <FaRegIdBadge className="text-2xl" />
           <h1 className="text-2xl font-bold text-gray-300">

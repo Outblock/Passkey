@@ -20,7 +20,7 @@ import {
 const KeyInfoCard = ({keyInfo}) => {
   return (
     <Card>
-      <CardBody className="flex flex-col space-y-4">
+      <CardBody className="flex flex-col space-y-4 p-6">
         <div className="flex items-center gap-4">
           <FaArrowDownWideShort className="text-2xl" />
           <h1 className="text-2xl font-bold text-gray-300"> Result </h1>
