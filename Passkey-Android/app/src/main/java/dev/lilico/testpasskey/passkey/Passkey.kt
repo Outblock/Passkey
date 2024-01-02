@@ -47,7 +47,7 @@ class Passkey(private val context: Context) {
                 val userData = UserData(userId, responseData.id, username, publicKey.b64Encode(), Instant.now().epochSecond)
 //                saveUserAccount(responseData.id, userData)
                 return userData
-            } catch (e: CreateCredentialException) {
+            } catch (e: Exception) {
                 e.printStackTrace()
                 return null
             }
@@ -116,13 +116,7 @@ class Passkey(private val context: Context) {
 //                    return
 //                }
 //                val publicKey = userData.publicKey.toJavaPublicKey()
-//                if (verifySignature(responseData, publicKey)) {
-//                    _state.emit(LoginState.LoginSuccess(userData.email, userData.creationDate))
-//                } else {
-//                    _state.emit(LoginState.LoginError("Signature verification failed"))
-//                }
             } catch (e: Exception) {
-//                _state.emit(LoginState.LoginError(e.message ?: "Unknown error"))
                 e.printStackTrace()
                 null
             }
