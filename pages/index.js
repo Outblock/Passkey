@@ -1,84 +1,20 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import {
-  Button,
-  Card,
-  CardBody,
-  Divider,
-  Input,
-} from "@nextui-org/react";
-import {
-  FaKey,
-} from "react-icons/fa6";
-import {
-  createPasskey,
-  getPasskey,
-  getPKfromLogin,
-  getPKfromRegister,
-} from "../utils/passkey";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import KeyInfoCard from "../components/KeyInfoCard";
 import ProgressBar from "../components/ProgressBar";
+import SignCard from "../components/SignCard";
+import WalletCard from "../components/WalletCard";
+import fclConfig from "../utils/config";
+import { StoreContext } from '../contexts'
 
 export default function Home() {
-  const network = 'testnet'
-  const [username, setUsername] = useState("");
-  const [registerInfo, setRegisterInfo] = useState(null);
-  const [loginInfo, setLoginInfo] = useState(null);
-  const [keyInfo, setKeyInfo] = useState(null);
-  const [txId, setTxId] = useState(null);
+  const network = process.env.network;
+  const { store, setStore } = useContext(StoreContext)
 
   useEffect(() => {
-    const decodeLoginInfo = async () => {
-      const result = await getPKfromLogin(loginInfo);
-      console.log(result);
-      setKeyInfo(result);
-
-      const response = await fetch("/api/getAddress", {
-        method: "POST",
-        body: JSON.stringify({
-          publicKey: result.pubK,
-          network: network,
-          apikey: process.env.apikey,
-        }),
-      });
-
-      const body = await response.json()
-      console.log('body ==>', body)
-
-    };
-
-    if (loginInfo) {
-      decodeLoginInfo();
-    }
-  }, [loginInfo]);
-
-  useEffect(() => {
-    const decodeRegisterInfo = async () => {
-      const result = await getPKfromRegister(registerInfo);
-      console.log(result);
-      setKeyInfo(result);
-
-      const response = await fetch("/api/createAddress", {
-        method: "POST",
-        body: JSON.stringify({
-          publicKey: result.pubK,
-          network: network,
-          apikey: process.env.apikey,
-        }),
-      });
-      const body = await response.json()
-      if (body.txId) {
-        setTxId(body.txId)
-      }
-      console.log("txId =>", body);
-      console.log("txId =>", body.txId);
-    };
-    if (registerInfo && registerInfo.userId) {
-      console.log("registerInfo 1111");
-      decodeRegisterInfo();
-    }
-  }, [registerInfo]);
+    fclConfig()
+  },[])
 
   return (
     <div className={styles.container}>
@@ -90,59 +26,10 @@ export default function Home() {
 
       <main className={styles.main}>
         <div className="min-w-1/3 max-w-lg flex flex-col gap-4">
-          <Card>
-            <CardBody className="flex flex-col space-y-4 p-6">
-              <div className="flex items-center gap-4">
-                <FaKey className="text-2xl" />
-                <h1 className="text-3xl font-bold text-gray-300">
-                  Passkey on Flow
-                </h1>
-              </div>
-              <h1 className="text-1xl text-gray-500 pb-3">
-                This is a Demo for showing the passkey on flow blockchain.
-              </h1>
-
-              <Input
-                isClearable
-                type="text"
-                label="Username"
-                value={username}
-                description="Create your username for passkey"
-                onValueChange={setUsername}
-              />
-
-              <Button
-                color="primary"
-                variant="solid"
-                // startContent={<FaCircleUser />}
-                onPress={async () =>
-                  setRegisterInfo(await createPasskey(username, username))
-                }
-              >
-                Register
-              </Button>
-
-              <div className="flex items-center gap-6 justify-center">
-                <Divider className="w-5/12" />
-                <p className="text-gray-500">or</p>
-                <Divider className="w-5/12" />
-              </div>
-
-              <Button
-                color="default"
-                variant="solid"
-                // startContent={<FaRegIdBadge />}
-                onPress={async () => {
-                  const result = await getPasskey();
-                  setLoginInfo(result);
-                }}
-              >
-                Sign In
-              </Button>
-            </CardBody>
-          </Card>
-          { txId && <ProgressBar txId={txId} network={network}/> }
-          {keyInfo && <KeyInfoCard keyInfo={keyInfo} />}
+          {store.address && <WalletCard address={store.address} /> }
+          {!store.keyInfo && <SignCard /> }
+          {store.isCreating && <ProgressBar txId={store.txId} network={network}/> }
+          {store.keyInfo && <KeyInfoCard keyInfo={store.keyInfo} />}
         </div>
       </main>
     </div>

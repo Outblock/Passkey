@@ -16,8 +16,12 @@ import {
   Input,
   Progress,
 } from "@nextui-org/react";
+import { useContext } from "react";
+import { StoreContext } from "../contexts";
 
-const KeyInfoCard = ({keyInfo}) => {
+const KeyInfoCard = ({ keyInfo }) => {
+  const { store } = useContext(StoreContext);
+
   return (
     <Card>
       <CardBody className="flex flex-col space-y-4 p-6">
@@ -28,6 +32,13 @@ const KeyInfoCard = ({keyInfo}) => {
         <Divider />
 
         <div className="grid grid-cols-4 gap-4 overflow-auto">
+          {store.address && <h6> Address </h6>}
+          {store.address && (
+            <div className="col-span-3">
+              <Code className="whitespace-normal">{store.address}</Code>
+            </div>
+          )}
+
           <h6> Mnemonic </h6>
           <div className="col-span-3">
             <Code className="whitespace-normal">{keyInfo.mnemonic}</Code>

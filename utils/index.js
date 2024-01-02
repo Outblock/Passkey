@@ -27,4 +27,9 @@ function getRandomBytes(length) {
   return array;
 }
 
-export { base64DecodeURL, base64EncodeURL, getRandomBytes };
+function fmtFlow(balance) {
+  if (balance == null) return null
+  return String(Number(balance) / 100000000)
+}
+
+export { base64DecodeURL, base64EncodeURL, getRandomBytes, fmtFlow };
