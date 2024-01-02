@@ -26,6 +26,7 @@ const WalletCard = ({ address }) => {
 
     if (address) {
       fetchBalance();
+      window.localStorage.setItem('store', JSON.stringify(store))
     }
   }, [address]);
 

@@ -5,16 +5,19 @@ import KeyInfoCard from "../components/KeyInfoCard";
 import ProgressBar from "../components/ProgressBar";
 import SignCard from "../components/SignCard";
 import WalletCard from "../components/WalletCard";
+import Connect from "../components/Connect";
 import fclConfig from "../utils/config";
 import { StoreContext } from '../contexts'
+import * as fcl from "@onflow/fcl";
+
 
 export default function Home() {
   const network = process.env.network;
-  const { store, setStore } = useContext(StoreContext)
+  const { store } = useContext(StoreContext)
 
   useEffect(() => {
     fclConfig()
-  },[])
+  }, [])
 
   return (
     <div className={styles.container}>
@@ -26,6 +29,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <div className="min-w-1/3 max-w-lg flex flex-col gap-4">
+          {store.address && <Connect address={store.address}/> }
           {store.address && <WalletCard address={store.address} /> }
           {!store.keyInfo && <SignCard /> }
           {store.isCreating && <ProgressBar txId={store.txId} network={network}/> }

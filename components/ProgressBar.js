@@ -20,6 +20,7 @@ const ProgressBar = ({txId, network}) => {
       console.log('address ==>', address)
       setStore((s) => ({...s, address, isCreating: false}));
       console.log('user ==>', store)
+      window.sessionStorage.setItem('store', JSON.stringify(store))
       return address
     };
 
