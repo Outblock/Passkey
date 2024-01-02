@@ -6,10 +6,10 @@ import {
     Divider,
     Snippet,
   } from "@nextui-org/react";
-  import { StoreContext } from "../contexts";
+  import { StoreContext } from "../../contexts";
   import { useEffect, useState, useContext } from "react";
   import { FaWallet } from "react-icons/fa";
-  import { fmtFlow } from "../utils";
+  import { fmtFlow } from "../../utils";
   import * as fcl from "@onflow/fcl";
   import { RiGlobalLine } from "react-icons/ri";
   
