@@ -4,29 +4,38 @@ import android.app.Activity
 import android.content.Context
 import android.credentials.CreateCredentialException
 import androidx.credentials.CredentialManager
-import androidx.compose.ui.platform.LocalContext
 import androidx.credentials.CreatePublicKeyCredentialRequest
 import androidx.credentials.CreatePublicKeyCredentialResponse
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.GetPublicKeyCredentialOption
+import androidx.credentials.PublicKeyCredential
+import androidx.lifecycle.viewModelScope
+import co.nstant.`in`.cbor.CborDecoder
+import co.nstant.`in`.cbor.model.UnicodeString
+import co.nstant.`in`.cbor.model.ByteString
+import co.nstant.`in`.cbor.model.Map
 import com.google.gson.Gson
-import com.google.protobuf.ByteString
 import dev.lilico.testpasskey.passkey.model.CreatePasskeyRequest
 import dev.lilico.testpasskey.passkey.model.CreatePasskeyResponseData
 import dev.lilico.testpasskey.passkey.model.GetPasskeyRequest
 import dev.lilico.testpasskey.passkey.model.UserData
+import dev.lilico.testpasskey.passkeyo.model.GetPasskeyResponseData
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.security.SecureRandom
 import java.time.Instant
 import java.util.UUID
 
-class Passkey(context: Context) {
+class Passkey(private val context: Context) {
     private var gson = Gson()
     private var credentialManager = CredentialManager.create(context)
 
-    suspend fun createPasskeyAccount(activity: Activity, email: String) {
-            val userId = UUID.randomUUID().toString()
+    suspend fun createPasskeyAccount(username: String): UserData? {
             try {
+                val userId = generateFidoChallenge(16)
                 val response = credentialManager.createCredential(
-                    activity,
-                    CreatePublicKeyCredentialRequest(getCreatePasskeyRequest(userId, email)),
+                    context,
+                    CreatePublicKeyCredentialRequest(getCreatePasskeyRequest(userId, username)),
                 )
                 val responseData = gson.fromJson(
                     (response as CreatePublicKeyCredentialResponse).registrationResponseJson,
@@ -35,12 +44,12 @@ class Passkey(context: Context) {
                 val attestationObject = CborDecoder.decode(responseData.response.attestationObject.b64Decode()).first()
                 val authData = (attestationObject as Map).get(UnicodeString("authData")) as ByteString
                 val publicKey = parseAuthData(authData.bytes)
-                val userData = UserData(responseData.id, email, publicKey.b64Encode(), Instant.now().epochSecond)
-                accountRepository.saveUserAccount(responseData.id, userData)
-                _state.emit(LoginState.CreateAccountSuccess)
+                val userData = UserData(userId, responseData.id, username, publicKey.b64Encode(), Instant.now().epochSecond)
+//                saveUserAccount(responseData.id, userData)
+                return userData
             } catch (e: CreateCredentialException) {
-                _state.emit(LoginState.CreateAccountError(e.message ?: "Unknown error"))
                 e.printStackTrace()
+                return null
             }
     }
 
@@ -83,22 +92,72 @@ class Passkey(context: Context) {
         )
     }
 
+    /**
+     * Call the credential manager to create a passkey login request
+     */
+    private suspend fun getLoginResponse(
+        option: GetPublicKeyCredentialOption
+    ): GetPasskeyResponseData {
+        val getCredRequest = GetCredentialRequest(listOf(option))
+        val response = credentialManager.getCredential(context, getCredRequest)
+        val cred = response.credential as PublicKeyCredential
+        return gson.fromJson(cred.authenticationResponseJson, GetPasskeyResponseData::class.java)
+    }
+
+    fun login(): GetPasskeyResponseData? {
+        return runBlocking {
+            try {
+                val option = GetPublicKeyCredentialOption(getLoginPasskeyRequest(listOf()))
+                val responseData = getLoginResponse(option)
+                responseData
+//                val userData = accountRepository.getUserAccount(responseData.id)
+//                if (userData == null) {
+//                    _state.emit(LoginState.LoginError("No account found for this user"))
+//                    return
+//                }
+//                val publicKey = userData.publicKey.toJavaPublicKey()
+//                if (verifySignature(responseData, publicKey)) {
+//                    _state.emit(LoginState.LoginSuccess(userData.email, userData.creationDate))
+//                } else {
+//                    _state.emit(LoginState.LoginError("Signature verification failed"))
+//                }
+            } catch (e: Exception) {
+//                _state.emit(LoginState.LoginError(e.message ?: "Unknown error"))
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+
     private fun getLoginPasskeyRequest(allowedCredential: List<String>): String {
         return gson.toJson(
             GetPasskeyRequest(
                 challenge = generateFidoChallenge(32),
                 timeout = 1800000,
-                userVerification = "required",
+//                userVerification = "required",
                 rpId = RELYING_PARTY_ID,
-                allowCredentials = allowedCredential.map {
-                    GetPasskeyRequest.AllowCredentials(
-                        id = it,
-                        transports = listOf(),
-                        type = "public-key"
-                    )
-                }
+//                allowCredentials = allowedCredential.map {
+//                    GetPasskeyRequest.AllowCredentials(
+//                        id = it,
+//                        transports = listOf(),
+//                        type = "public-key"
+//                    )
+//                }
             )
         )
+    }
+
+    /**
+     * Parse the authData from the attestationObject to get the public key
+     */
+    private fun parseAuthData(buffer: ByteArray): ByteArray {
+        /*val rpIdHash = buffer.copyOfRange(0, 32)
+        val flags = buffer.copyOfRange(32, 33)
+        val signCount = buffer.copyOfRange(33, 37)
+        val aaguid = buffer.copyOfRange(37, 53)*/
+        val credentialIdLength = buffer.copyOfRange(53, 55)
+        //val credentialId = buffer.copyOfRange(55, 55 + credentialIdLength[1].toInt())
+        return buffer.copyOfRange(55 + credentialIdLength[1].toInt(), buffer.size)
     }
 
     companion object {

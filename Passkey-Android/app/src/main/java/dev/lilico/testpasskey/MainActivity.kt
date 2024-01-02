@@ -26,16 +26,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dagger.hilt.android.AndroidEntryPoint
 import dev.lilico.testpasskey.pages.AccountCard
+import dev.lilico.testpasskey.pages.AccountHandler
 import dev.lilico.testpasskey.pages.AccountInfo
 import dev.lilico.testpasskey.passkey.Passkey
 import dev.lilico.testpasskey.ui.theme.TestPasskeyTheme
 
 class MainActivity : ComponentActivity() {
 
+    private var passkey: Passkey
+    private var accountHandler: AccountHandler
+
     init {
         System.loadLibrary("TrustWalletCore")
-        Passkey(applicationContext)
+        passkey = Passkey(applicationContext)
+        accountHandler = AccountHandler(passkey)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,8 +53,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AccountCard()
-                    AccountInfo()
+                    AccountCard(accountHandler)
+                    AccountInfo(accountHandler)
                 }
             }
         }
@@ -63,8 +69,8 @@ fun GreetingPreview() {
         color = MaterialTheme.colorScheme.background
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
-            AccountCard()
-            AccountInfo()
+            AccountCard(AccountHandler(Passkey(LocalContext.current)))
+            AccountInfo(AccountHandler(Passkey(LocalContext.current)))
         }
     }
 }

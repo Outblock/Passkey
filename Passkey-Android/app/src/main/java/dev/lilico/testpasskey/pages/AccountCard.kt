@@ -16,13 +16,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.lilico.testpasskey.passkey.Passkey
 
 @Composable
-fun AccountCard() {
+fun AccountCard(accountHandler: AccountHandler) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier
@@ -36,7 +38,7 @@ fun AccountCard() {
         Text("This is a demo for passkey on flow blockchain", fontSize = 18.sp, fontWeight = FontWeight.Normal)
 
         Button(
-            onClick = {  },
+            onClick = { accountHandler.register() },
             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
             modifier = Modifier
                 .fillMaxWidth()
@@ -46,7 +48,7 @@ fun AccountCard() {
         }
 
         Button(
-            onClick = {  },
+            onClick = { accountHandler.signIn() },
             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -63,7 +65,7 @@ fun AccountCardPreview() {
         color = MaterialTheme.colorScheme.background
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
-            AccountCard()
+            AccountCard(AccountHandler(Passkey(LocalContext.current)))
         }
     }
 }
