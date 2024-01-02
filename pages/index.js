@@ -8,8 +8,6 @@ import WalletCard from "../components/WalletCard";
 import Connect from "../components/Connect";
 import fclConfig from "../utils/config";
 import { StoreContext } from '../contexts'
-import * as fcl from "@onflow/fcl";
-
 
 export default function Home() {
   const network = process.env.network;
