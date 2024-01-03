@@ -5,11 +5,14 @@ import {
   Avatar,
   Divider,
   Snippet,
+  Tabs,
+  Tab
 } from "@nextui-org/react";
 import { StoreContext } from "../contexts";
 import { useEffect, useState, useContext } from "react";
 import { FaWallet } from "react-icons/fa";
 import { fmtFlow } from "../utils";
+import KeyInfoCard from "./KeyInfoCard";
 import * as fcl from "@onflow/fcl";
 
 const WalletCard = ({ address }) => {
@@ -26,7 +29,9 @@ const WalletCard = ({ address }) => {
 
     if (address) {
       fetchBalance();
-      window.localStorage.setItem("store", JSON.stringify(store));
+      const userInfo = { ...store }
+      delete userInfo.keyInfo
+      window.localStorage.setItem('store', JSON.stringify(userInfo))
     }
   }, [address]);
 
@@ -54,6 +59,10 @@ const WalletCard = ({ address }) => {
           This is a Demo for showing the passkey on flow blockchain.
         </h1> */}
 
+        <Tabs aria-label="Options" fullWidth>
+
+        <Tab key="Tokens" title="Tokens">
+
         <div className="flex items-center gap-4">
           {/* <Avatar color="success" src={`https://source.boringavatars.com/marble/160/${store.address}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51`}/> */}
           <Avatar
@@ -69,13 +78,20 @@ const WalletCard = ({ address }) => {
             <h1 className="text-1xl text-gray-500 uppercase">Flow</h1>
           </div>
         </div>
+        </Tab>
+
+        <Tab key="Key" title="Key">
+            <KeyInfoCard />
+        </Tab>
+
+        </Tabs>
 
         <Button
           color="danger"
           variant="light"
           onPress={() => {
             setStore({});
-            window.localStorage.clear();
+            window.localStorage.removeItem('store')
           }}
         >
           Sign Out

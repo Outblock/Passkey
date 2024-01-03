@@ -13,9 +13,11 @@ const SignCard = () => {
 
   useEffect(() => {
     const decodeLoginInfo = async () => {
-        console.log("loginInfo ==>", loginInfo);
+      console.log("loginInfo ==>", loginInfo);
       const result = await getPKfromLogin(loginInfo);
-      setStore((s) => ({...s, keyInfo: result}));
+
+      console.log("id ===>", loginInfo.id)
+      setStore((s) => ({...s, keyInfo: result, id: loginInfo.id}));
 
       const response = await fetch("/api/getAddress", {
         method: "POST",
@@ -41,7 +43,8 @@ const SignCard = () => {
   useEffect(() => {
     const decodeRegisterInfo = async () => {
       const result = await getPKfromRegister(registerInfo);
-      setStore((s) => ({...s, keyInfo: result}));
+      console.log("id ===>", registerInfo.result.id)
+      setStore((s) => ({...s, keyInfo: result, id: registerInfo.result.id}));
 
       const response = await fetch("/api/createAddress", {
         method: "POST",
@@ -105,7 +108,7 @@ const SignCard = () => {
           variant="solid"
           // startContent={<FaRegIdBadge />}
           onPress={async () => {
-            const result = await getPasskey();
+            const result = await getPasskey(store.id || "");
             setLoginInfo(result);
           }}
         >

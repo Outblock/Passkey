@@ -40,7 +40,6 @@ export function addCredential(settings, user, id, credentialPublicKey, response)
 			"instant": new Date().toISOString(),
 			"user": {
 				"name": user.name,
-				"id": user.id,
 				"displayName": user.displayName,
 			},
 			"id": id,

@@ -84,7 +84,6 @@ class PasskeyHandler: NSObject, ObservableObject, ASAuthorizationControllerPrese
         }
         self.entropy = entropy
         performAction(action: .register(challenge: randomChallenage(), name: "\(userIndex) - \(username)", userID: entropy))
-//        entropy = Data()
     }
 
     func signIn() {

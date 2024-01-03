@@ -18,6 +18,7 @@ import styles from "../../styles/Home.module.css";
 import Head from "next/head";
 import { initWasm } from "@trustwallet/wallet-core";
 import { sha256 } from "../../modules/Crypto";
+import { flowPath, getPasskey, getPKfromLogin } from "../../utils/passkey";
 
 const Authz = ({ address }) => {
   const { store, setStore } = useContext(StoreContext);
@@ -35,13 +36,13 @@ const Authz = ({ address }) => {
 
   const onApproval = async () => {
     const { HDWallet, Curve } = await initWasm();
-    const wallet = HDWallet.createWithMnemonic(store.keyInfo.mnemonic, "")
-    const pk = wallet.getKeyByCurve(Curve.nist256p1, "m/44'/539'/0'/0/0")
+    console.log("onApproval id ==>", store.id)
+    const result = await getPasskey(store.id || "");
+    const wallet = HDWallet.createWithEntropy(result.response.userHandle, "")
+    const pk = wallet.getKeyByCurve(Curve.nist256p1, flowPath)
     const messageHash = await sha256(Buffer.from(authzInfo.body.message, 'hex'))
     const signature = pk.sign(new Uint8Array(messageHash), Curve.nist256p1)
     const sigHex = Buffer.from(signature.subarray(0, signature.length - 1)).toString('hex')
-
-    console.log("sigHex ==>", sigHex)
 
     fcl.WalletUtils.approve({
       f_type: "CompositeSignature",

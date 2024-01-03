@@ -3,6 +3,7 @@ import { Card, CardBody, Progress, Link } from "@nextui-org/react";
 import { useContext, useEffect } from "react";
 import { StoreContext } from '../contexts'
 import * as fcl from "@onflow/fcl";
+import { addCredential, readSettings } from "../modules/settings";
 
 const ProgressBar = ({txId, network}) => {
 
@@ -13,14 +14,12 @@ const ProgressBar = ({txId, network}) => {
   useEffect(() => {
     const waitForTx = async () => {
       const result = await fcl.tx(txId).onceSealed()
-      console.log('waitForTx ==>', result)
       const event = result.events.filter(event => event.type === 'flow.AccountCreated')[0]
-      console.log('event ==>', event)
       const address = event.data.address
-      console.log('address ==>', address)
       setStore((s) => ({...s, address, isCreating: false}));
-      console.log('user ==>', store)
-      window.localStorage.setItem('store', JSON.stringify(store))
+      const userInfo = { ...store }
+      delete userInfo.keyInfo
+      window.localStorage.setItem('store', JSON.stringify(userInfo))
       return address
     };
 

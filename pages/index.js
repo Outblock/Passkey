@@ -8,6 +8,7 @@ import WalletCard from "../components/WalletCard";
 import Connect from "../components/Connect";
 import fclConfig from "../utils/config";
 import { StoreContext } from '../contexts'
+import { readSettings } from "../modules/settings";
 
 export default function Home() {
   const network = process.env.network;
@@ -15,6 +16,7 @@ export default function Home() {
 
   useEffect(() => {
     fclConfig()
+    console.log("readSettings ==>", readSettings())
   }, [])
 
   return (
@@ -29,9 +31,8 @@ export default function Home() {
         <div className="min-w-1/3 max-w-lg flex flex-col gap-4">
           {store.address && <Connect address={store.address}/> }
           {store.address && <WalletCard address={store.address} /> }
-          {!store.keyInfo && <SignCard /> }
+          {!store.id && <SignCard /> }
           {store.isCreating && <ProgressBar txId={store.txId} network={network}/> }
-          {store.keyInfo && <KeyInfoCard keyInfo={store.keyInfo} />}
         </div>
       </main>
     </div>
