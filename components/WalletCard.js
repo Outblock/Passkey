@@ -26,7 +26,7 @@ const WalletCard = ({ address }) => {
 
     if (address) {
       fetchBalance();
-      window.localStorage.setItem('store', JSON.stringify(store))
+      window.localStorage.setItem("store", JSON.stringify(store));
     }
   }, [address]);
 
@@ -69,6 +69,17 @@ const WalletCard = ({ address }) => {
             <h1 className="text-1xl text-gray-500 uppercase">Flow</h1>
           </div>
         </div>
+
+        <Button
+          color="danger"
+          variant="light"
+          onPress={() => {
+            setStore({});
+            window.localStorage.clear();
+          }}
+        >
+          Sign Out
+        </Button>
       </CardBody>
     </Card>
   );
