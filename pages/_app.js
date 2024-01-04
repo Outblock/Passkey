@@ -17,7 +17,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <NextUIProvider>
       <StoreContext.Provider value={{store, setStore}}>
-      <main className="dark text-foreground bg-transparent">
+      <main className="dark text-foreground bg-background">
         <Component {...pageProps} />
       </main>
       </StoreContext.Provider>
