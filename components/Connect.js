@@ -11,6 +11,7 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  Checkbox
 } from "@nextui-org/react";
 import { StoreContext } from "../contexts";
 import { useEffect, useState, useContext } from "react";
@@ -18,6 +19,7 @@ import { FaWallet } from "react-icons/fa";
 import { fmtFlow } from "../utils";
 import * as fcl from "@onflow/fcl";
 import { RiGlobalLine } from "react-icons/ri";
+import { FaCircleCheck } from "react-icons/fa6";
 
 const Connect = ({ address }) => {
   const { store, setStore } = useContext(StoreContext);
@@ -107,17 +109,41 @@ const Connect = ({ address }) => {
               </div>
             </ModalHeader>
             <ModalBody>
-              <div className="flex bg-zinc-800 items-center px-4 py-2 rounded-medium gap-2">
-                <RiGlobalLine className="text-lg text-blue-100" />
-                <h1 className="text-lg font-normal text-blue-100">
-                  {authnInfo.config.client.hostname}
-                </h1>
+                <div className="flex flex-col gap-4">
+              <Card >
+                <CardBody>
+                    <div className="flex items-center gap-2">
+                        <RiGlobalLine className="text-lg text-blue-100" />
+                        <h1 className="text-lg font-normal text-blue-100">
+                        {authnInfo.config.client.hostname}
+                        </h1>
+                    </div>
+                </CardBody>
+              </Card>
+              <Card >
+                <CardBody>
+                    <h1 className="text-base font-normal text-gray-500 uppercase mb-3">
+                        This App would like to
+                    </h1>
+                    <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2">
+                            <FaCircleCheck className="text-success-500 text-normal"/>
+                            <p>View your wallet balance and activity</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <FaCircleCheck className="text-success-500 text-normal"/>
+                            <p>Request approval for transactions</p>
+                        </div>
+                    </div>
+                </CardBody>
+              </Card>
               </div>
+
             </ModalBody>
             <ModalFooter>
               <Button
                 color="default"
-                className="w-full"
+                className="w-full h-12"
                 onPress={() => {
                   onClose();
                   onReject();
@@ -129,7 +155,7 @@ const Connect = ({ address }) => {
               <Button
                 color="primary"
                 variant="solid"
-                className="w-full"
+                className="w-full h-12"
                 onPress={() => {
                   onClose();
                   onApproval();
