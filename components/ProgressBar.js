@@ -30,12 +30,12 @@ const ProgressBar = ({txId, network}) => {
   }, [txId])
 
   return (
-    <Card>
+    <Card className="w-full">
       <CardBody className="flex flex-col space-y-4 p-6">
         <div className="flex items-center gap-4">
           <FaRegIdBadge className="text-2xl" />
           <h1 className="text-2xl font-bold text-gray-300">
-            Creating Your Flow Address
+            Creating Flow Address
           </h1>
         </div>
         <Progress

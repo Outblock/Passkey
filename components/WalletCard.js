@@ -9,6 +9,8 @@ import {
   Tab,
   Tooltip,
   Chip,
+  ButtonGroup,
+  CardHeader,
 } from "@nextui-org/react";
 import { StoreContext } from "../contexts";
 import { useEffect, useState, useContext } from "react";
@@ -18,6 +20,12 @@ import KeyInfoCard from "./KeyInfoCard";
 import * as fcl from "@onflow/fcl";
 import { IoExitOutline } from "react-icons/io5";
 import { LuCopy } from "react-icons/lu";
+import {
+  IoArrowUpOutline,
+  IoArrowDownOutline,
+  IoAddOutline,
+  IoSwapHorizontalOutline,
+} from "react-icons/io5";
 
 const WalletCard = ({ address }) => {
   const { store, setStore } = useContext(StoreContext);
@@ -44,8 +52,8 @@ const WalletCard = ({ address }) => {
 
   return (
     <Card className="w-full h-full">
-      <CardBody className="flex flex-col space-y-4 p-6">
-        <div className="flex items-center gap-4">
+      <CardHeader className="flex flex-col w-full gap-4 px-6 pt-6">
+        <div className="flex items-center gap-4 w-full">
           <FaWallet className="text-2xl" />
           <h1 className="text-3xl font-bold text-gray-300">Flow Wallet</h1>
           {/* <Chip
@@ -72,11 +80,11 @@ const WalletCard = ({ address }) => {
           </Tooltip>
         </div>
 
-        <Card>
+        <Card className="w-full">
           <CardBody className="px-4">
             <div className="flex items-center gap-6">
               <Avatar
-                isBordered={store.network !== 'mainnet'}
+                isBordered={process.env.network !== "mainnet"}
                 name="🤑"
                 color="success"
                 size="md"
@@ -84,14 +92,14 @@ const WalletCard = ({ address }) => {
               />
               <div className="flex flex-col items-start gap-2 grow">
                 <div className="flex gap-2">
-                  <h1 className="font-bold">{store.username || 'Name'}</h1>
+                  <h1 className="font-bold">{store.username || "Name"}</h1>
                   <Chip
                     color="success"
                     size="sm"
                     variant="flat"
                     className="uppercase text-xs"
                   >
-                    {store.network}
+                    {process.env.network}
                   </Chip>
                 </div>
                 <h1 className="text-gray-400">{store.address}</h1>
@@ -109,6 +117,34 @@ const WalletCard = ({ address }) => {
           </CardBody>
         </Card>
 
+        <div className="flex items-center w-full gap-4">
+        <ButtonGroup radius="full" className="basis-3/4 w-full grow" isDisabled>
+          <Button className="w-full">
+            <IoArrowUpOutline className="text-2xl" />
+          </Button>
+          <Button className="w-full">
+            <IoSwapHorizontalOutline className="text-2xl" />
+          </Button>
+          <Button className="w-full">
+            <IoArrowDownOutline className="text-2xl" />
+          </Button>
+        </ButtonGroup>
+
+        <Button
+          className="basis-1/4 w-full"
+          radius="full"
+          isDisabled
+          startContent={<IoAddOutline className="text-2xl" />}
+        >
+          Buy
+        </Button>
+      </div>
+
+      <Divider />
+
+      </CardHeader>
+
+      <CardBody className="flex flex-col space-y-4 px-6">
         {/* <Snippet
           size="md"
           symbol=""
@@ -119,13 +155,32 @@ const WalletCard = ({ address }) => {
           {store.address}
         </Snippet> */}
 
-        <Divider />
+        {/* <Card className="w-full">
+                <CardBody className="items-center">
+                    <IoAddOutline className="text-3xl font-bold" />
+                    <p className="text-gray-300">Add</p>
+                </CardBody>
+            </Card>
+
+            <Card className="w-full">
+                <CardBody className="items-center">
+                    <IoArrowUpOutline className="text-3xl font-bold" />
+                    <p className="text-gray-300">Send</p>
+                </CardBody>
+            </Card>
+
+            <Card className="w-full">
+                <CardBody className="items-center">
+                    <IoArrowDownOutline className="text-3xl font-bold" />
+                    <p className="text-gray-300">Receive</p>
+                </CardBody>
+            </Card> */}
 
         {/* <h1 className="text-1xl text-gray-500 pb-3">
           This is a Demo for showing the passkey on flow blockchain.
         </h1> */}
 
-        <Tabs aria-label="Options" fullWidth>
+        <Tabs aria-label="Options" fullWidth radius="full">
           <Tab key="Tokens" title="Tokens">
             <div className="flex items-center gap-4">
               {/* <Avatar color="success" src={`https://source.boringavatars.com/marble/160/${store.address}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51`}/> */}
