@@ -12,10 +12,11 @@ import { readSettings } from "../modules/settings";
 
 export default function Home() {
   const network = process.env.network;
-  const { store } = useContext(StoreContext)
+  const { store, setStore } = useContext(StoreContext)
 
   useEffect(() => {
     fclConfig()
+    setStore((s) => ({...s, network}))
     console.log("readSettings ==>", readSettings())
   }, [])
 

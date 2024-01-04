@@ -11,6 +11,7 @@
   "dependencies": {
     "@nextui-org/react": "^2.2.9",
     "@onflow/fcl": "^1.9.0",
+    "@onflow/rlp": "^1.2.1",
     "@trustwallet/wallet-core": "4.0.13",
     "dotenv": "^16.3.1",
     "eslint": "8.49.0",

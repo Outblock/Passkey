@@ -3,23 +3,20 @@ import {
   Card,
   CardBody,
   Avatar,
-  Divider,
-  Snippet,
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
   useDisclosure,
-  Checkbox
 } from "@nextui-org/react";
 import { StoreContext } from "../contexts";
 import { useEffect, useState, useContext } from "react";
-import { FaWallet } from "react-icons/fa";
-import { fmtFlow } from "../utils";
 import * as fcl from "@onflow/fcl";
 import { RiGlobalLine } from "react-icons/ri";
 import { FaCircleCheck } from "react-icons/fa6";
+import { encode } from "@onflow/rlp"
+import { signAcctProofWithPassKey, signWithPassKey } from "../utils/sign";
 
 const Connect = ({ address }) => {
   const { store, setStore } = useContext(StoreContext);
@@ -41,44 +38,87 @@ const Connect = ({ address }) => {
     });
   }, []);
 
-  const onApproval = () => {
-    fcl.WalletUtils.approve({
-      f_type: "AuthnResponse",
-      f_vsn: "1.0.0",
-      addr: store.address,
-      network: store.network,
-      services: [
-        {
-          type: "authn",
-          uid: "fpk#authn",
-          f_type: "Service",
-          f_vsn: "1.0.0",
-          type: "authn",
-          id: store.address,
-          identity: {
-            address: store.address,
-          },
-          provider: {
-            address: "0x7179def56a8b9c5e",
-            description: "A wallet created for everyone.",
-            f_type: "ServiceProvider",
+  const onApproval = async () => {
+    const response = {
+        f_type: "AuthnResponse",
+        f_vsn: "1.0.0",
+        addr: store.address,
+        network: store.network,
+        services: [
+          {
+            type: "authn",
+            uid: "fpk#authn",
+            f_type: "Service",
             f_vsn: "1.0.0",
-            icon: "https://lilico.app/fcw-logo.png",
-            name: "Flow PassKey",
+            type: "authn",
+            id: store.address,
+            identity: {
+              address: store.address,
+            },
+            provider: {
+              address: "0x7179def56a8b9c5e",
+              description: "A wallet created for everyone.",
+              f_type: "ServiceProvider",
+              f_vsn: "1.0.0",
+              icon: "https://lilico.app/fcw-logo.png",
+              name: "Flow PassKey",
+            },
           },
-        },
-        {
-          endpoint: `${window.location.origin}/authz`,
-          f_type: "Service",
-          f_vsn: "1.0.0",
-          identity: { address: store.address, keyId: 0 },
-          method: "POP/RPC",
-          network: store.network,
-          type: "authz",
-          uid: "fpk#authz",
-        },
-      ],
-    });
+          {
+            endpoint: `${window.location.origin}/authz`,
+            f_type: "Service",
+            f_vsn: "1.0.0",
+            identity: { address: store.address, keyId: 0 },
+            method: "POP/RPC",
+            network: store.network,
+            type: "authz",
+            uid: "fpk#authz",
+          },
+          {
+              endpoint: `${window.location.origin}/user-sign`,
+              f_type: "Service",
+              f_vsn: "1.0.0",
+              method: "POP/RPC",
+              network: store.network,
+              type: "user-signature",
+              uid: "fpk#user-signature",
+          }
+        ],
+    }
+
+    if (authnInfo.body?.nonce && authnInfo.body?.appIdentifier && store.id) {
+        console.log('rlp ==>', store.address, authnInfo.body?.nonce, authnInfo.body?.appIdentifier)
+        const combind = fcl.WalletUtils.encodeAccountProof({appIdentifier: authnInfo.body?.appIdentifier, address: store.address, nonce: authnInfo.body?.nonce})
+        const signature = await signWithPassKey(store.id, combind)
+        response.services.push(
+            {
+                endpoint: `${window.location.origin}/acct-proof`,
+                f_type: "Service",
+                f_vsn: "1.0.0",
+                method: "POP/RPC",
+                network: store.network,
+                type: "account-proof",
+                uid: "fpk#user-signature",
+                data: {
+                    f_type: "account-proof",
+                    f_vsn: "2.0.0",
+                    address: store.address,
+                    nonce: authnInfo.body?.nonce,
+                    signatures: [
+                      {
+                        f_type: "CompositeSignature",
+                        f_vsn: "1.0.0",
+                        addr: store.address,
+                        keyId: 0,
+                        signature: signature
+                      }
+                    ]
+                }
+            }
+        )
+
+    }
+    fcl.WalletUtils.approve(response);
   };
 
   const onReject = () => {
@@ -156,9 +196,9 @@ const Connect = ({ address }) => {
                 color="primary"
                 variant="solid"
                 className="w-full h-12"
-                onPress={() => {
+                onPress={async () => {
                   onClose();
-                  onApproval();
+                  await onApproval();
                 }}
               >
                 Connect

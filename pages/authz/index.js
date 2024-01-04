@@ -10,18 +10,14 @@ import {
 } from "@nextui-org/react";
 import { StoreContext } from "../../contexts";
 import { useEffect, useState, useContext } from "react";
-import { FaWallet } from "react-icons/fa";
-import { fmtFlow } from "../../utils";
 import * as fcl from "@onflow/fcl";
 import { RiGlobalLine } from "react-icons/ri";
 import styles from "../../styles/Home.module.css";
 import Head from "next/head";
-import { initWasm } from "@trustwallet/wallet-core";
-import { sha256 } from "../../modules/Crypto";
-import { flowPath, getPasskey, getPKfromLogin } from "../../utils/passkey";
+import { signWithPassKey } from "../../utils/sign";
 
-const Authz = ({ address }) => {
-  const { store, setStore } = useContext(StoreContext);
+const Authz = () => {
+  const { store } = useContext(StoreContext);
   const [authzInfo, setAuthzInfo] = useState(null);
 
   useEffect(() => {
@@ -35,21 +31,12 @@ const Authz = ({ address }) => {
   }, []);
 
   const onApproval = async () => {
-    const { HDWallet, Curve } = await initWasm();
-    console.log("onApproval id ==>", store.id)
-    const result = await getPasskey(store.id || "");
-    const wallet = HDWallet.createWithEntropy(result.response.userHandle, "")
-    const pk = wallet.getKeyByCurve(Curve.nist256p1, flowPath)
-    const messageHash = await sha256(Buffer.from(authzInfo.body.message, 'hex'))
-    const signature = pk.sign(new Uint8Array(messageHash), Curve.nist256p1)
-    const sigHex = Buffer.from(signature.subarray(0, signature.length - 1)).toString('hex')
-
     fcl.WalletUtils.approve({
       f_type: "CompositeSignature",
       f_vsn: "1.0.0",
       addr: store.address,
       network: store.network,
-      signature: sigHex
+      signature: await signWithPassKey(store.id, authzInfo.body.message)
     });
   };
 

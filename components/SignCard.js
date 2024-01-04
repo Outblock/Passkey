@@ -3,6 +3,7 @@ import { StoreContext } from "../contexts";
 import { FaKey } from "react-icons/fa6";
 import { createPasskey, getPasskey, getPKfromLogin, getPKfromRegister } from "../utils/passkey";
 import { useEffect, useState, useContext } from "react";
+import { getUsername } from "../modules/settings"
 
 const SignCard = () => {
   const network = process.env.network;
@@ -15,9 +16,9 @@ const SignCard = () => {
     const decodeLoginInfo = async () => {
       console.log("loginInfo ==>", loginInfo);
       const result = await getPKfromLogin(loginInfo);
+      // console.log("id ===>", loginInfo.id)
 
-      console.log("id ===>", loginInfo.id)
-      setStore((s) => ({...s, keyInfo: result, id: loginInfo.id}));
+      setStore((s) => ({...s, id: loginInfo.id, username: getUsername(loginInfo.id,)}));
 
       const response = await fetch("/api/getAddress", {
         method: "POST",
@@ -44,7 +45,7 @@ const SignCard = () => {
     const decodeRegisterInfo = async () => {
       const result = await getPKfromRegister(registerInfo);
       console.log("id ===>", registerInfo.result.id)
-      setStore((s) => ({...s, keyInfo: result, id: registerInfo.result.id}));
+      setStore((s) => ({...s, keyInfo: result, id: registerInfo.result.id, username: username}));
 
       const response = await fetch("/api/createAddress", {
         method: "POST",

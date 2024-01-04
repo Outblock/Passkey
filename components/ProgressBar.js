@@ -3,7 +3,6 @@ import { Card, CardBody, Progress, Link } from "@nextui-org/react";
 import { useContext, useEffect } from "react";
 import { StoreContext } from '../contexts'
 import * as fcl from "@onflow/fcl";
-import { addCredential, readSettings } from "../modules/settings";
 
 const ProgressBar = ({txId, network}) => {
 

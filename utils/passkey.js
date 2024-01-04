@@ -7,8 +7,7 @@ import {
 import { decodeArray, encodeArray } from "../modules/base64";
 import { initWasm } from "@trustwallet/wallet-core";
 import { addCredential, readSettings } from "../modules/settings";
-
-const flowPath = "m/44'/539'/0'/0/0";
+import { FLOW_BIP44_PATH } from "./constants";
 
 const createPasskey = async (name, displayName) => {
   const userId = getRandomBytes(16);
@@ -46,7 +45,7 @@ const createPasskey = async (name, displayName) => {
     authData.attestedCredentialData.credentialPublicKey,
     result.response
   );
-  return { userId, result };
+  return { userId, result, userName: name };
 };
 
 const getPasskey = async (id) => {
@@ -79,9 +78,10 @@ const getPasskey = async (id) => {
 const getPKfromLogin = async (result) => {
   const { HDWallet, Curve } = await initWasm();
   const wallet = HDWallet.createWithEntropy(result.response.userHandle, "");
-  const pk = wallet.getKeyByCurve(Curve.nist256p1, flowPath);
+  const pk = wallet.getKeyByCurve(Curve.nist256p1, FLOW_BIP44_PATH);
   const pubk = pk.getPublicKeyNist256p1().uncompressed().data();
   const json = decodeClientDataJSON(result.response.clientDataJSON);
+  
   return {
     mnemonic: wallet.mnemonic(),
     pk: uint8Array2Hex(pk.data()),
@@ -97,7 +97,7 @@ const getPKfromRegister = async ({ userId, result }) => {
   }
   const { HDWallet, Curve } = await initWasm();
   const wallet = HDWallet.createWithEntropy(userId, "");
-  const pk = wallet.getKeyByCurve(Curve.nist256p1, flowPath);
+  const pk = wallet.getKeyByCurve(Curve.nist256p1, FLOW_BIP44_PATH);
   const pubk = pk.getPublicKeyNist256p1().uncompressed().data();
   return {
     mnemonic: wallet.mnemonic(),
@@ -111,4 +111,4 @@ const uint8Array2Hex = (input) => {
   return buffer.toString("hex");
 };
 
-export { createPasskey, getPasskey, getPKfromLogin, getPKfromRegister, flowPath };
+export { createPasskey, getPasskey, getPKfromLogin, getPKfromRegister };

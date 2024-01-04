@@ -73,7 +73,7 @@ const WalletCard = ({ address }) => {
         </div>
 
         <Card>
-          <CardBody>
+          <CardBody className="px-4">
             <div className="flex items-center gap-6">
               <Avatar
                 isBordered={store.network !== 'mainnet'}
@@ -84,7 +84,7 @@ const WalletCard = ({ address }) => {
               />
               <div className="flex flex-col items-start gap-2 grow">
                 <div className="flex gap-2">
-                  <h1 className="font-bold">Name</h1>
+                  <h1 className="font-bold">{store.username || 'Name'}</h1>
                   <Chip
                     color="success"
                     size="sm"

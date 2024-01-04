@@ -19,6 +19,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { StoreContext } from "../contexts";
 import { getPasskey, getPKfromLogin } from "../utils/passkey";
+import { FLOW_BIP44_PATH } from "../utils/constants";
 
 const KeyInfoCard = () => {
   const { store } = useContext(StoreContext);
@@ -62,7 +63,7 @@ const KeyInfoCard = () => {
             <h6> BIP44 Path </h6>
             <div className="col-span-3">
               <Code className="whitespace-normal w-full">
-                m/44&apos;/539&apos;/0&apos;/0/0
+                {FLOW_BIP44_PATH}
               </Code>
             </div>
 
