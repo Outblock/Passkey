@@ -23,7 +23,6 @@ const Connect = ({ address }) => {
   const [authnInfo, setAuthnInfo] = useState(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-
   useEffect(() => {
     const callback = (msg) => {
       console.log("msg ==>", msg, store.address);

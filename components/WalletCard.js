@@ -11,6 +11,7 @@ import {
   Chip,
   ButtonGroup,
   CardHeader,
+  useDisclosure
 } from "@nextui-org/react";
 import { StoreContext } from "../contexts";
 import { useEffect, useState, useContext } from "react";
@@ -26,10 +27,12 @@ import {
   IoAddOutline,
   IoSwapHorizontalOutline,
 } from "react-icons/io5";
+import SignOut from "./SignOut";
 
 const WalletCard = ({ address }) => {
   const { store, setStore } = useContext(StoreContext);
   const [balance, setBalance] = useState(0.0);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -70,10 +73,7 @@ const WalletCard = ({ address }) => {
               isIconOnly
               aria-label="Exit"
               variant="light"
-              onPress={() => {
-                setStore({});
-                window.localStorage.removeItem("store");
-              }}
+              onPress={onOpen}
             >
               <IoExitOutline className="text-2xl text-danger" />
             </Button>
@@ -148,41 +148,7 @@ const WalletCard = ({ address }) => {
       </CardHeader>
 
       <CardBody className="flex flex-col space-y-4 px-6">
-        {/* <Snippet
-          size="md"
-          symbol=""
-          tooltipProps={{
-            color: "foreground",
-          }}
-        >
-          {store.address}
-        </Snippet> */}
-
-        {/* <Card className="w-full">
-                <CardBody className="items-center">
-                    <IoAddOutline className="text-3xl font-bold" />
-                    <p className="text-gray-300">Add</p>
-                </CardBody>
-            </Card>
-
-            <Card className="w-full">
-                <CardBody className="items-center">
-                    <IoArrowUpOutline className="text-3xl font-bold" />
-                    <p className="text-gray-300">Send</p>
-                </CardBody>
-            </Card>
-
-            <Card className="w-full">
-                <CardBody className="items-center">
-                    <IoArrowDownOutline className="text-3xl font-bold" />
-                    <p className="text-gray-300">Receive</p>
-                </CardBody>
-            </Card> */}
-
-        {/* <h1 className="text-1xl text-gray-500 pb-3">
-          This is a Demo for showing the passkey on flow blockchain.
-        </h1> */}
-
+        <SignOut isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}/>
         <Tabs aria-label="Options" fullWidth radius="full">
           <Tab key="Tokens" title="Tokens">
             <div className="flex items-center gap-4">
