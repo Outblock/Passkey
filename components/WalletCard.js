@@ -118,30 +118,33 @@ const WalletCard = ({ address }) => {
         </Card>
 
         <div className="flex items-center w-full gap-4">
-        <ButtonGroup radius="full" className="basis-3/4 w-full grow" isDisabled>
-          <Button className="w-full">
-            <IoArrowUpOutline className="text-2xl" />
-          </Button>
-          <Button className="w-full">
-            <IoSwapHorizontalOutline className="text-2xl" />
-          </Button>
-          <Button className="w-full">
-            <IoArrowDownOutline className="text-2xl" />
-          </Button>
-        </ButtonGroup>
+          <ButtonGroup
+            radius="full"
+            className="basis-3/4 w-full grow"
+            isDisabled
+          >
+            <Button className="w-full">
+              <IoArrowUpOutline className="text-2xl" />
+            </Button>
+            <Button className="w-full">
+              <IoSwapHorizontalOutline className="text-2xl" />
+            </Button>
+            <Button className="w-full">
+              <IoArrowDownOutline className="text-2xl" />
+            </Button>
+          </ButtonGroup>
 
-        <Button
-          className="basis-1/4 w-full"
-          radius="full"
-          isDisabled
-          startContent={<IoAddOutline className="text-2xl" />}
-        >
-          Buy
-        </Button>
-      </div>
+          <Button
+            className="basis-1/4 w-full"
+            radius="full"
+            isDisabled
+            startContent={<IoAddOutline className="text-2xl" />}
+          >
+            Buy
+          </Button>
+        </div>
 
-      <Divider />
-
+        <Divider />
       </CardHeader>
 
       <CardBody className="flex flex-col space-y-4 px-6">
