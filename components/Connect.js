@@ -23,11 +23,14 @@ const Connect = ({ address }) => {
   const [authnInfo, setAuthnInfo] = useState(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+
   useEffect(() => {
     const callback = (msg) => {
-      console.log("msg ==>", msg);
+      console.log("msg ==>", msg, store.address);
       setAuthnInfo(msg);
-      onOpen();
+      if (store.address) {
+        onOpen();
+      }
     };
     try {
       fcl.WalletUtils.ready(callback);
@@ -36,7 +39,7 @@ const Connect = ({ address }) => {
     window.addEventListener("message", (d) => {
       console.log("Harness Message Received", d.data);
     });
-  }, []);
+  }, [store.address]);
 
   const onApproval = async () => {
     const response = {
