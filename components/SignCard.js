@@ -1,16 +1,28 @@
-import { Button, Card, CardBody, Divider, Input } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  Divider,
+  Input,
+  Chip,
+} from "@nextui-org/react";
 import { StoreContext } from "../contexts";
 import { FaKey } from "react-icons/fa6";
-import { createPasskey, getPasskey, getPKfromLogin, getPKfromRegister } from "../utils/passkey";
+import {
+  createPasskey,
+  getPasskey,
+  getPKfromLogin,
+  getPKfromRegister,
+} from "../utils/passkey";
 import { useEffect, useState, useContext } from "react";
-import { getUsername } from "../modules/settings"
+import { getUsername } from "../modules/settings";
 
 const SignCard = () => {
   const network = process.env.network;
   const [username, setUsername] = useState("");
   const [registerInfo, setRegisterInfo] = useState(null);
   const [loginInfo, setLoginInfo] = useState(null);
-  const {store, setStore} = useContext(StoreContext);
+  const { store, setStore } = useContext(StoreContext);
 
   useEffect(() => {
     const decodeLoginInfo = async () => {
@@ -18,7 +30,11 @@ const SignCard = () => {
       const result = await getPKfromLogin(loginInfo);
       // console.log("id ===>", loginInfo.id)
 
-      setStore((s) => ({...s, id: loginInfo.id, username: getUsername(loginInfo.id,)}));
+      setStore((s) => ({
+        ...s,
+        id: loginInfo.id,
+        username: getUsername(loginInfo.id),
+      }));
 
       const response = await fetch("/api/getAddress", {
         method: "POST",
@@ -32,7 +48,7 @@ const SignCard = () => {
       const body = await response.json();
       console.log("body ==>", body);
       if (body.data && body.data.length > 0) {
-        setStore((s) => ({...s, address: body.data[0].address}))
+        setStore((s) => ({ ...s, address: body.data[0].address }));
       }
     };
 
@@ -44,8 +60,13 @@ const SignCard = () => {
   useEffect(() => {
     const decodeRegisterInfo = async () => {
       const result = await getPKfromRegister(registerInfo);
-      console.log("id ===>", registerInfo.result.id)
-      setStore((s) => ({...s, keyInfo: result, id: registerInfo.result.id, username: username}));
+      console.log("id ===>", registerInfo.result.id);
+      setStore((s) => ({
+        ...s,
+        keyInfo: result,
+        id: registerInfo.result.id,
+        username: username,
+      }));
 
       const response = await fetch("/api/createAddress", {
         method: "POST",
@@ -57,7 +78,7 @@ const SignCard = () => {
       });
       const body = await response.json();
       if (body.txId) {
-        setStore((s) => ({...s, txId: body.txId, isCreating: true}));
+        setStore((s) => ({ ...s, txId: body.txId, isCreating: true }));
       }
       console.log("txId =>", body.txId);
     };
@@ -73,6 +94,14 @@ const SignCard = () => {
         <div className="flex items-center gap-4">
           <FaKey className="text-2xl" />
           <h1 className="text-3xl font-bold text-gray-300">Passkey on Flow</h1>
+          <Chip
+            color="success"
+            size="sm"
+            variant="flat"
+            className="uppercase text-xs"
+          >
+            {process.env.network}
+          </Chip>
         </div>
         <h1 className="text-1xl text-gray-500 pb-3">
           This is a Demo for showing the passkey on flow blockchain.
