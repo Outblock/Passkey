@@ -29,7 +29,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <div className="w-1/2 h-dvh py-5 min-w-[calc(max(50%,450px))] max-w-[calc(min(50%,450px))] flex flex-col gap-6 items-center justify-center">
+        <div className="w-1/2 min-w-[calc(max(50%,400px))] max-w-[calc(min(50%,400px))] sm:w-full h-dvh py-5 flex flex-col gap-6 items-center justify-center">
           <Connect/>
           {store.address && <WalletCard address={store.address} /> }
           {!store.id && <SignCard /> }

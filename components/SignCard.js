@@ -94,14 +94,14 @@ const SignCard = () => {
         <div className="flex items-center gap-4">
           <FaKey className="text-2xl" />
           <h1 className="text-3xl font-bold text-gray-300">Passkey on Flow</h1>
-          <Chip
+          { process.env.network !== 'mainnet' && <Chip
             color="success"
             size="sm"
             variant="flat"
             className="uppercase text-xs"
           >
             {process.env.network}
-          </Chip>
+          </Chip>}
         </div>
         <h1 className="text-1xl text-gray-500 pb-3">
           This is a Demo for showing the passkey on flow blockchain.
