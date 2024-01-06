@@ -20,7 +20,8 @@ const config = {
           foreground: "#000000",
         },
         warning: {
-          DEFAULT: "#FFEF6A"
+          DEFAULT: "#FFEF6A",
+          foreground: "#000000",
         }
         // focus: "#BEF264",
       },
