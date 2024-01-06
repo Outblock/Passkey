@@ -82,7 +82,7 @@ import { IoKeyOutline, IoChevronForwardOutline, IoChevronBackOutline, IoFingerPr
                     {isExpanded ? <IoChevronForwardOutline className="text-lg text-gray-500"/> : <IoChevronForwardOutline className="text-lg text-gray-500"/>}
                 </div>
 
-                {isExpanded && <KeyInfoCard className="transition-transform"/>}
+                {isExpanded && <KeyInfoCard className="!transition-transform"/>}
             </CardBody>
         </Card>
 

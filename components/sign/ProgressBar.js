@@ -40,6 +40,7 @@ const ProgressBar = ({txId, network}) => {
         </div>
         <Progress
           size="md"
+          color="primary"
           isIndeterminate
           aria-label="Loading..."
           className="max-w"

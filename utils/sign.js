@@ -1,6 +1,6 @@
 import { initWasm } from "@trustwallet/wallet-core";
 import { FLOW_BIP44_PATH } from "./constants";
-import { getPasskey } from "./passkey";
+import { getPKfromLogin, getPasskey } from "./passkey";
 import { sha256 } from "../modules/Crypto";
 
 const DOMAIN_TAG = {

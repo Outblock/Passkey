@@ -5,6 +5,8 @@ import {
   Divider,
   Input,
   Chip,
+  AvatarGroup,
+  Avatar
 } from "@nextui-org/react";
 import { StoreContext } from "../../contexts";
 import { FaKey } from "react-icons/fa6";
@@ -16,6 +18,7 @@ import {
 } from "../../utils/passkey";
 import { useEffect, useState, useContext } from "react";
 import { getUsername } from "../../modules/settings";
+import { IoKeyOutline, IoChevronForwardOutline, IoChevronBackOutline, IoFingerPrintOutline} from "react-icons/io5";
 
 const SignCard = () => {
   const network = process.env.network;
@@ -91,6 +94,7 @@ const SignCard = () => {
   }, [registerInfo, network]);
 
   return (
+    <div className="flex flex-col gap-4">
     <Card>
       <CardBody className="flex flex-col space-y-4 p-6">
         <div className="flex items-center gap-4">
@@ -136,8 +140,9 @@ const SignCard = () => {
         </div>
 
         <Button
-          color="default"
+          color="warning"
           variant="solid"
+          className="text-black"
           // startContent={<FaRegIdBadge />}
           onPress={async () => {
             const result = await getPasskey(store.id || "");
@@ -148,6 +153,23 @@ const SignCard = () => {
         </Button>
       </CardBody>
     </Card>
+    <Button className="bg-zinc-900 py-10 px-6">
+      <div className="flex gap-4 w-full">
+      <div className="flex flex-col gap-2 grow items-start">
+        <p className="font-semibold text-base inline-flex items-center">Import address <IoChevronForwardOutline className="text-[#FF7964]"/> </p>
+        <p className="text-gray-500 text-sm">Support Flow Wallet, Blocto, json and raw key</p>
+      </div>
+
+      <AvatarGroup isBordered size="sm" >
+      <Avatar src="https://static.vecteezy.com/system/resources/previews/017/395/378/original/google-drive-icons-free-png.png" />
+      <Avatar src="https://github.com/Outblock/fcl-swift/blob/main/Assets/blocto/logo.jpg?raw=true" />
+      <Avatar src="https://frw-link.lilico.app/_next/image?url=%2Flogo.png&w=256&q=75" />
+    </AvatarGroup>
+
+      </div>
+      </Button>
+    </div>
+    
   );
 };
 

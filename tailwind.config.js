@@ -19,6 +19,9 @@ const config = {
           DEFAULT: "#FF7964",
           foreground: "#000000",
         },
+        warning: {
+          DEFAULT: "#FFEF6A"
+        }
         // focus: "#BEF264",
       },
     },
