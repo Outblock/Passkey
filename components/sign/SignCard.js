@@ -140,9 +140,9 @@ const SignCard = () => {
         </div>
 
         <Button
-          color="warning"
+          // color="warning"
           variant="solid"
-          className="text-black"
+          // className="text-black"
           // startContent={<FaRegIdBadge />}
           onPress={async () => {
             const result = await getPasskey(store.id || "");
@@ -156,7 +156,7 @@ const SignCard = () => {
     <Button className="bg-zinc-900 py-10 px-6">
       <div className="flex gap-4 w-full">
       <div className="flex flex-col gap-2 grow items-start">
-        <p className="font-semibold text-base inline-flex items-center">Import address <IoChevronForwardOutline className="text-[#FF7964]"/> </p>
+        <p className="font-semibold text-base inline-flex items-center">Import address <IoChevronForwardOutline className="text-[#FFEF6A]"/> </p>
         <p className="text-gray-500 text-sm">Support Flow Wallet, Blocto, json and raw key</p>
       </div>
 

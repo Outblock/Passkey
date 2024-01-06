@@ -25,18 +25,11 @@ import KeyInfoCard from "./KeyInfoCard";
 import { IoKeyOutline, IoChevronForwardOutline, IoChevronBackOutline, IoFingerPrintOutline} from "react-icons/io5";
 
   const Setting = () => {
-    const [isSelected, setIsSelected] = useState(window.localStorage.getItem('enableBiometric') === 'true');
+    const [enableBiometric, setEnableBiometric] = useState(window.localStorage.getItem('enableBiometric') === 'true');
     const { store, setStore } = useContext(StoreContext);
     const [isExpanded, setExpanded] = useState(false)
 
-    // useEffect(()=> {
-    //     const value = window.localStorage.getItem('enableBiometric') === 'true'
-    //     console.log()
-    //     setIsSelected(value)
-    // },[])
-
     const handleKeyInfo = async (isSelected) => {
-        console.log("handleKeyInfo ==>", isSelected)
         if (isSelected) {
             const userInfo = { ...store };
             delete userInfo.keyInfo;
@@ -45,7 +38,6 @@ import { IoKeyOutline, IoChevronForwardOutline, IoChevronBackOutline, IoFingerPr
         } else {
             const result = await getPasskey(store.id)
             const keyInfo = await getPKfromLogin(result);
-            console.log("handleKeyInfo keyInfo ==>",store, keyInfo)
             setStore((s)=>({...s, keyInfo: keyInfo}))
             window.localStorage.setItem("store", JSON.stringify({...store, keyInfo: keyInfo}));
         }
@@ -61,11 +53,11 @@ import { IoKeyOutline, IoChevronForwardOutline, IoChevronBackOutline, IoFingerPr
                         <p className="font-bold text-sm">Biometric</p>
                         <p className="text-sm text-gray-500">Enable biometric check every time</p>
                     </div>
-                    <Switch isSelected={isSelected} onValueChange={async () => {
-                        console.log("onValueChange ==>", isSelected)
-                        setIsSelected(!isSelected); 
-                        window.localStorage.setItem('enableBiometric',!isSelected)
-                        handleKeyInfo(!isSelected)
+                    <Switch isSelected={enableBiometric} onValueChange={async () => {
+                        console.log("onValueChange ==>", enableBiometric)
+                        setEnableBiometric(!enableBiometric); 
+                        window.localStorage.setItem('enableBiometric',!enableBiometric)
+                        handleKeyInfo(!enableBiometric)
                     }} />
                 </div>
             </CardBody>

@@ -77,6 +77,20 @@ const Connect = ({ address }) => {
             uid: "fpk#authz",
           },
           {
+            endpoint: `${window.location.origin}/api/preAuthz`,
+            f_type: "Service",
+            f_vsn: "1.0.0",
+            identity: { address: process.env.payerAddress, keyId: process.env.payerKeyIndex },
+            method: "HTTP/POST",
+            network: store.network,
+            type: "pre-authz",
+            uid: "fpk#pre-authz",
+            params: {
+              address: store.address, 
+              keyId: 0 
+            }
+          },
+          {
               endpoint: `${window.location.origin}/user-sign`,
               f_type: "Service",
               f_vsn: "1.0.0",
