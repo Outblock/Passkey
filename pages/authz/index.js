@@ -36,7 +36,7 @@ const Authz = () => {
       f_vsn: "1.0.0",
       addr: store.address,
       network: store.network,
-      signature: await signWithPassKey(store.id, authzInfo.body.message)
+      signature: await signWithPassKey(store, authzInfo.body.message)
     });
   };
 

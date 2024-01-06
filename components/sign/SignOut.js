@@ -10,13 +10,12 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/react";
-import { StoreContext } from "../contexts";
+import { StoreContext } from "../../contexts";
 import { useEffect, useState, useContext } from "react";
 import * as fcl from "@onflow/fcl";
 import { RiGlobalLine } from "react-icons/ri";
 import { FaCircleCheck } from "react-icons/fa6";
 import { encode } from "@onflow/rlp";
-import { signAcctProofWithPassKey, signWithPassKey } from "../utils/sign";
 
 const SignOut = ({ isOpen, onOpen, onOpenChange }) => {
   const { store, setStore } = useContext(StoreContext);

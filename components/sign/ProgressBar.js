@@ -1,7 +1,7 @@
 import { FaRegIdBadge } from "react-icons/fa6";
 import { Card, CardBody, Progress, Link } from "@nextui-org/react";
 import { useContext, useEffect } from "react";
-import { StoreContext } from '../contexts'
+import { StoreContext } from '../../contexts'
 import * as fcl from "@onflow/fcl";
 
 const ProgressBar = ({txId, network}) => {

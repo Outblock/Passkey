@@ -1,9 +1,9 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { useEffect, useState, useContext } from "react";
-import KeyInfoCard from "../components/KeyInfoCard";
-import ProgressBar from "../components/ProgressBar";
-import SignCard from "../components/SignCard";
+import KeyInfoCard from "../components/setting/KeyInfoCard";
+import ProgressBar from "../components/sign/ProgressBar";
+import SignCard from "../components/sign/SignCard";
 import WalletCard from "../components/WalletCard";
 import Connect from "../components/Connect";
 import fclConfig from "../utils/config";

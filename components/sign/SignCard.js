@@ -6,16 +6,16 @@ import {
   Input,
   Chip,
 } from "@nextui-org/react";
-import { StoreContext } from "../contexts";
+import { StoreContext } from "../../contexts";
 import { FaKey } from "react-icons/fa6";
 import {
   createPasskey,
   getPasskey,
   getPKfromLogin,
   getPKfromRegister,
-} from "../utils/passkey";
+} from "../../utils/passkey";
 import { useEffect, useState, useContext } from "react";
-import { getUsername } from "../modules/settings";
+import { getUsername } from "../../modules/settings";
 
 const SignCard = () => {
   const network = process.env.network;

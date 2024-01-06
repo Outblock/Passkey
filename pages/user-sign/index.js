@@ -34,7 +34,7 @@ import { signUserMsgWithPassKey } from "../../utils/sign";
         addr: store.address,
         network: store.network,
         keyId: 0,
-        signature: await signUserMsgWithPassKey(store.id, authzInfo.body.message)
+        signature: await signUserMsgWithPassKey(store, authzInfo.body.message)
       });
     };
   

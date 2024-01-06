@@ -10,9 +10,9 @@ import {
   Chip,
 } from "@nextui-org/react";
 import { useContext, useEffect, useState } from "react";
-import { StoreContext } from "../contexts";
-import { getPasskey, getPKfromLogin } from "../utils/passkey";
-import { FLOW_BIP44_PATH } from "../utils/constants";
+import { StoreContext } from "../../contexts";
+import { getPasskey, getPKfromLogin } from "../../utils/passkey";
+import { FLOW_BIP44_PATH } from "../../utils/constants";
 
 const KeyInfoCard = () => {
   const { store } = useContext(StoreContext);

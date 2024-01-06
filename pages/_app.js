@@ -14,6 +14,10 @@ function MyApp({ Component, pageProps }) {
     if (cache) {
       setStore(object)
     }
+
+    if (window.localStorage.getItem('enableBiometric') == null) {
+      window.localStorage.setItem('enableBiometric', true)
+    }
   }, [])
 
   return (

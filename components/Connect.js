@@ -91,7 +91,7 @@ const Connect = ({ address }) => {
     if (authnInfo.body?.nonce && authnInfo.body?.appIdentifier && store.id) {
         console.log('rlp ==>', store.address, authnInfo.body?.nonce, authnInfo.body?.appIdentifier)
         const combind = fcl.WalletUtils.encodeAccountProof({appIdentifier: authnInfo.body?.appIdentifier, address: store.address, nonce: authnInfo.body?.nonce})
-        const signature = await signWithPassKey(store.id, combind)
+        const signature = await signWithPassKey(store, combind)
         response.services.push(
             {
                 endpoint: `${window.location.origin}/acct-proof`,
