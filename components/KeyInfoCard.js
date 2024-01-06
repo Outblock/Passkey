@@ -1,20 +1,13 @@
 import {
-  FaRegIdBadge,
-  FaCircleUser,
-  FaKey,
   FaHashtag,
-  FaArrowDownWideShort,
 } from "react-icons/fa6";
 import { TbMathMax } from "react-icons/tb";
 import {
-  Button,
+  Snippet,
   Card,
   CardBody,
   Code,
-  Divider,
   Chip,
-  Input,
-  Progress,
 } from "@nextui-org/react";
 import { useContext, useEffect, useState } from "react";
 import { StoreContext } from "../contexts";

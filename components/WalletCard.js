@@ -11,7 +11,8 @@ import {
   Chip,
   ButtonGroup,
   CardHeader,
-  useDisclosure
+  CardFooter,
+  useDisclosure,
 } from "@nextui-org/react";
 import { StoreContext } from "../contexts";
 import { useEffect, useState, useContext } from "react";
@@ -28,11 +29,14 @@ import {
   IoSwapHorizontalOutline,
 } from "react-icons/io5";
 import SignOut from "./SignOut";
+import { CustomTab } from "./CustomTab";
+import Setting from "./Setting";
 
 const WalletCard = ({ address }) => {
   const { store, setStore } = useContext(StoreContext);
   const [balance, setBalance] = useState(0.0);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [selected, setSelected] = useState("token");
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -119,7 +123,7 @@ const WalletCard = ({ address }) => {
 
         <div className="flex items-center w-full gap-4">
           <ButtonGroup
-            radius="full"
+            // radius="full"
             className="basis-3/4 w-full grow"
             isDisabled
           >
@@ -136,7 +140,7 @@ const WalletCard = ({ address }) => {
 
           <Button
             className="basis-1/4 w-full"
-            radius="full"
+            // radius="full"
             isDisabled
             startContent={<IoAddOutline className="text-2xl" />}
           >
@@ -148,10 +152,10 @@ const WalletCard = ({ address }) => {
       </CardHeader>
 
       <CardBody className="flex flex-col space-y-4 px-6">
-        <SignOut isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}/>
-        <Tabs aria-label="Options" fullWidth radius="full">
-          <Tab key="Tokens" title="Tokens">
-            <div className="flex items-center gap-4">
+        <SignOut isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} />
+        <Tabs aria-label="Options"  selectedKey={selected} onSelectionChange={setSelected} fullWidth radius="full" className="hidden">
+          <Tab key="Token" title="Tokens" className="!mt-0 h-full">
+            <div className="flex items-center gap-4 ">
               {/* <Avatar color="success" src={`https://source.boringavatars.com/marble/160/${store.address}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51`}/> */}
               <Avatar
                 size="sm"
@@ -168,11 +172,14 @@ const WalletCard = ({ address }) => {
             </div>
           </Tab>
 
-          <Tab key="Key" title="Key">
-            <KeyInfoCard />
+          <Tab key="Setting" title="Key" className="!mt-0 h-full">
+            <Setting />
           </Tab>
         </Tabs>
       </CardBody>
+      <CardFooter className="w-full">
+        <CustomTab selected={selected} setSelected={setSelected}/>
+      </CardFooter>
     </Card>
   );
 };

@@ -32,4 +32,11 @@ function fmtFlow(balance) {
   return String(Number(balance) / 100000000)
 }
 
+// Object.defineProperty(String.prototype, 'capitalize', {
+//   value: function() {
+//     return this.charAt(0).toUpperCase() + this.slice(1);
+//   },
+//   enumerable: false
+// });
+
 export { base64DecodeURL, base64EncodeURL, getRandomBytes, fmtFlow };

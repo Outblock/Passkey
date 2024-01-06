@@ -24,6 +24,8 @@ const SignCard = () => {
   const [loginInfo, setLoginInfo] = useState(null);
   const { store, setStore } = useContext(StoreContext);
 
+  console.log("SignCard ==>");
+
   useEffect(() => {
     const decodeLoginInfo = async () => {
       console.log("loginInfo ==>", loginInfo);
