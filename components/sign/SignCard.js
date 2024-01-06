@@ -19,6 +19,7 @@ import {
 import { useEffect, useState, useContext } from "react";
 import { getUsername } from "../../modules/settings";
 import { IoKeyOutline, IoChevronForwardOutline, IoChevronBackOutline, IoFingerPrintOutline} from "react-icons/io5";
+import Router from 'next/router';
 
 const SignCard = () => {
   const network = process.env.network;
@@ -152,7 +153,7 @@ const SignCard = () => {
         </Button>
       </CardBody>
     </Card>
-    <Button className="bg-zinc-900 py-10 px-6">
+    <Button className="bg-zinc-900 py-10 px-6" onPress={()=>{Router.push('/import')}}>
       <div className="flex gap-4 w-full">
       <div className="flex flex-col gap-2 grow items-start">
         <p className="font-semibold text-base inline-flex items-center">Import address <IoChevronForwardOutline className="text-[#FF7964]"/> </p>
