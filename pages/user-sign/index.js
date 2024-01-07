@@ -33,7 +33,7 @@ import { signUserMsgWithPassKey } from "../../utils/sign";
         f_vsn: "1.0.0",
         addr: store.address,
         network: store.network,
-        keyId: store.keyInfo.keyIndex,
+        keyId: parseInt(store.keyInfo.keyIndex),
         signature: await signUserMsgWithPassKey(store, authzInfo.body.message)
       });
     };

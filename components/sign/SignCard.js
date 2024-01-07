@@ -20,6 +20,7 @@ import { useEffect, useState, useContext } from "react";
 import { getUsername } from "../../modules/settings";
 import { IoKeyOutline, IoChevronForwardOutline, IoChevronBackOutline, IoFingerPrintOutline} from "react-icons/io5";
 import Router from 'next/router';
+import { isEnableBiometric, login } from "../../account";
 
 const SignCard = () => {
   const network = process.env.network;
@@ -34,13 +35,6 @@ const SignCard = () => {
     const decodeLoginInfo = async () => {
       console.log("loginInfo ==>", loginInfo);
       const result = await getPKfromLogin(loginInfo);
-      // console.log("id ===>", loginInfo.id)
-
-      setStore((s) => ({
-        ...s,
-        id: loginInfo.id,
-        username: getUsername(loginInfo.id),
-      }));
 
       const response = await fetch("/api/getAddress", {
         method: "POST",
@@ -54,7 +48,17 @@ const SignCard = () => {
       const body = await response.json();
       console.log("body ==>", body);
       if (body.data && body.data.length > 0) {
-        setStore((s) => ({ ...s, address: body.data[0].address }));
+        const user = {...store}
+        user.address = body.data[0].address
+        user.id = loginInfo.id
+        user.username = getUsername(loginInfo.id)
+        if (isEnableBiometric()) {
+          delete result.pk
+          delete result.mnemonic
+        }
+        user.keyInfo = result
+        setStore(user);
+        login(user)
       }
     };
 

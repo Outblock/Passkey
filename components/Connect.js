@@ -87,7 +87,7 @@ const Connect = ({ address }) => {
             uid: "fpk#pre-authz",
             params: {
               address: store.address, 
-              keyId: store.keyInfo.keyIndex
+              keyId: parseInt(store.keyInfo.keyIndex)
             }
           },
           {
@@ -125,7 +125,7 @@ const Connect = ({ address }) => {
                         f_type: "CompositeSignature",
                         f_vsn: "1.0.0",
                         addr: store.address,
-                        keyId: store.keyInfo.keyIndex,
+                        keyId: parseInt(store.keyInfo.keyIndex),
                         signature: signature
                       }
                     ]

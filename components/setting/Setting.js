@@ -9,24 +9,25 @@ import {
   IoChevronForwardOutline,
   IoFingerPrintOutline,
 } from "react-icons/io5";
-import { KEYS, deleteKeyInfo, isEnableBiometric, set } from "../../account";
+import { KEYS, deleteKeyInfo, isEnableBiometric, set, login } from "../../account";
 
 const Setting = () => {
-  const [enableBiometric, setEnableBiometric] = useState(isEnableBiometric);
+  const [enableBiometric, setEnableBiometric] = useState(isEnableBiometric());
   const { store, setStore } = useContext(StoreContext);
   const [isExpanded, setExpanded] = useState(false);
 
   const handleKeyInfo = async (isSelected) => {
     if (isSelected) {
       const userInfo = { ...store };
-      delete userInfo.keyInfo;
-      deleteKeyInfo();
+      delete userInfo.keyInfo.pk;
+      delete userInfo.keyInfo.mnemonic;
       setStore(userInfo);
+      login(userInfo)
     } else {
       const result = await getPasskey(store.id);
       const keyInfo = await getPKfromLogin(result);
       setStore((s) => ({ ...s, keyInfo: keyInfo }));
-      set(KEYS.STORE, JSON.stringify({ ...store, keyInfo: keyInfo }));
+      login({ ...store, keyInfo: keyInfo });
     }
   };
 
@@ -40,7 +41,7 @@ const Setting = () => {
             <IoFingerPrintOutline className="text-2xl text-gray-300" />
             <div className="flex flex-col grow">
               <p className="font-bold text-sm">Biometric</p>
-              {store.keyInfo.type === KEY_TYPE.PASSKEY ? (
+              {store.id ? (
                 <p className="text-sm text-gray-500">
                   Enable biometric check every time
                 </p>
@@ -49,7 +50,7 @@ const Setting = () => {
               )}
             </div>
             <Switch
-              isDisabled={store.keyInfo.type !== KEY_TYPE.PASSKEY}
+              isDisabled={store.id == null}
               isSelected={enableBiometric}
               onValueChange={async () => {
                 console.log("onValueChange ==>", enableBiometric);

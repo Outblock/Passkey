@@ -4,7 +4,7 @@ import { Snippet, Card, CardBody, Code, Chip } from "@nextui-org/react";
 import { useContext, useEffect, useState } from "react";
 import { StoreContext } from "../../contexts";
 import { getPasskey, getPKfromLogin } from "../../utils/passkey";
-import { FLOW_BIP44_PATH } from "../../utils/constants";
+import { FLOW_BIP44_PATH, KEY_TYPE } from "../../utils/constants";
 
 const KeyInfoCard = () => {
   const { store } = useContext(StoreContext);
@@ -13,7 +13,7 @@ const KeyInfoCard = () => {
 
   useEffect(() => {
     const fetchKeyInfo = async () => {
-      if (store.keyInfo) {
+      if (store.keyInfo && store.keyInfo.type !== KEY_TYPE.PASSKEY) {
         setKeyInfo(store.keyInfo);
       } else {
         const result = await getPasskey(store.id || "");
@@ -71,7 +71,7 @@ const KeyInfoCard = () => {
 
             <div className="col-span-4 justify-self-end">
               <div className="flex justify-self-end gap-4">
-                <Chip startContent={<TbMathMax />} variant="faded">
+                <Chip startContent={<TbMathMax />}  variant="faded">
                   {keyInfo.signAlgo}
                 </Chip>
 

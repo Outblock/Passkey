@@ -1,5 +1,5 @@
 import { initWasm } from "@trustwallet/wallet-core";
-import { FLOW_BIP44_PATH, HASH_ALGO, SIGN_ALGO } from "./constants";
+import { FLOW_BIP44_PATH, HASH_ALGO, KEY_TYPE, SIGN_ALGO } from "./constants";
 import { getPKfromLogin, getPasskey } from "./passkey";
 import { sha256 } from "../modules/Crypto";
 import { isEnableBiometric } from "../account";
@@ -29,6 +29,10 @@ const signWithKey = async (store, message) => {
         return await signWithPassKey(store, message)
     }
 
+    if (store.keyInfo.type === KEY_TYPE.PASSKEY) {
+        return await signWithPassKey(store, message)
+    }
+
     // Other key
     const { HDWallet, Curve, Hash, PrivateKey } = await initWasm();
     const messageData = Buffer.from(message, 'hex')
@@ -42,12 +46,12 @@ const signWithKey = async (store, message) => {
 }
 
 const signWithPassKey = async (store, message) => {
-    console.log('signWithPassKey ===>', store)
+    console.log('signWithPassKey ===>', isEnableBiometric(), store)
     const { HDWallet, Curve, Hash } = await initWasm();
     const id = store.id
     let wallet;
 
-    if (isEnableBiometric) {
+    if (isEnableBiometric()) {
         const result = await getPasskey(id || "");
         wallet = HDWallet.createWithEntropy(result.response.userHandle, "")
     } else {

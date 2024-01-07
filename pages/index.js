@@ -27,7 +27,7 @@ export default function Home() {
         <div className="w-1/2 min-w-[calc(max(50%,400px))] max-w-[calc(min(50%,400px))] sm:w-full h-dvh py-5 flex flex-col gap-6 items-center justify-center">
           <Connect/>
           { isLoading && <CircularProgress aria-label="Loading..." /> }
-          {store.address && <WalletCard address={store.address} /> }
+          {store.keyInfo && <WalletCard address={store.address} /> }
           {!store.keyInfo && !isLoading && <SignCard /> }
           {store.isCreating && <ProgressBar txId={store.txId} network={network}/> }
         </div>

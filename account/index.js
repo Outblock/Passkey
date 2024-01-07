@@ -12,6 +12,17 @@ const login = (obj) => {
     window.localStorage.setItem(KEYS.STORE, JSON.stringify(obj))
 }
 
+const loginWithPasskey = (obj) => {
+    if (isEnableBiometric()) {
+        const userInfo = {...obj}
+        delete userInfo.keyInfo
+        login(userInfo)
+        return
+    }
+
+    login(obj)
+}
+
 const load = () => {
     return JSON.parse(window.localStorage.getItem(KEYS.STORE))
 }
@@ -38,4 +49,4 @@ const deleteKeyInfo = () => {
     window.localStorage.setItem(KEYS.STORE, JSON.stringify(store))
 }
 
-export {isEnableBiometric, signOut, login, deleteKeyInfo, load, set, KEYS}
+export {isEnableBiometric, signOut, login, deleteKeyInfo, load, set, KEYS, loginWithPasskey}

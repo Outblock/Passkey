@@ -107,6 +107,7 @@ const getPKfromLogin = async (result) => {
     type: KEY_TYPE.PASSKEY,
     pk: uint8Array2Hex(pk.data()),
     pubK: uint8Array2Hex(pubk).replace(/^04/, ""),
+    keyIndex: 0,
     signAlgo: SIGN_ALGO.P256,
     hashAlgo: HASH_ALGO.SHA256,
     addtional: {
@@ -129,6 +130,7 @@ const getPKfromRegister = async ({ userId, result }) => {
     mnemonic: wallet.mnemonic(),
     pk: uint8Array2Hex(pk.data()),
     pubK: uint8Array2Hex(pubk).replace(/^04/, ""),
+    keyIndex: 0,
     signAlgo: SIGN_ALGO.P256,
     hashAlgo: HASH_ALGO.SHA256
   };
