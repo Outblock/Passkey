@@ -16,7 +16,12 @@ const SeedPhraseImport = ({ address }) => {
       className="grow"
     />
     {/* <Input isRequired type="password" label="Password" placeholder="Enter password for json file"/> */}
-    <Button className="w-full" color="primary"> Import </Button>
+    <Input
+        label="Address"
+        placeholder="Enter your flow address (Optional)"
+        type="text"
+      />
+    <Button className="w-full font-bold" color="primary"> Import </Button>
     </div>
   );
 };

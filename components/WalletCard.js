@@ -32,6 +32,7 @@ import { CustomTab } from "./tab/CustomTab";
 import Setting from "./setting/Setting";
 import TokenList from "./token/TokenList";
 import { IoCardOutline } from "react-icons/io5";
+import { isEnableBiometric } from "../account";
 
 const WalletCard = ({ address }) => {
   const { store, setStore } = useContext(StoreContext);
@@ -41,12 +42,11 @@ const WalletCard = ({ address }) => {
 
   useEffect(() => {
     if (address) {
-      const userInfo = { ...store };
-      if (window.localStorage.getItem('enableBiometric') === 'true') {
-        console.log('delete', window.localStorage.getItem('enableBiometric'))
-        delete userInfo.keyInfo;
-      }
-      window.localStorage.setItem("store", JSON.stringify(userInfo));
+      // const userInfo = { ...store };
+      // if (isEnableBiometric) {
+      //   delete userInfo.keyInfo;
+      // }
+      // window.localStorage.setItem("store", JSON.stringify(userInfo));
     }
   }, [address]);
 

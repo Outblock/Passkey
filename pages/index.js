@@ -6,7 +6,6 @@ import ProgressBar from "../components/sign/ProgressBar";
 import SignCard from "../components/sign/SignCard";
 import WalletCard from "../components/WalletCard";
 import Connect from "../components/Connect";
-import fclConfig from "../utils/config";
 import { StoreContext } from '../contexts'
 import { readSettings } from "../modules/settings";
 import { CircularProgress } from "@nextui-org/react";
@@ -17,7 +16,6 @@ export default function Home() {
   const [isLoading, setLoading ] = useState(true)
 
   useEffect(() => {
-    fclConfig()
     setStore((s) => ({...s, network}))
     console.log("readSettings ==>", readSettings())
     setLoading(false)
@@ -30,7 +28,7 @@ export default function Home() {
           <Connect/>
           { isLoading && <CircularProgress aria-label="Loading..." /> }
           {store.address && <WalletCard address={store.address} /> }
-          {!store.id && !isLoading && <SignCard /> }
+          {!store.keyInfo && !isLoading && <SignCard /> }
           {store.isCreating && <ProgressBar txId={store.txId} network={network}/> }
         </div>
       </main>

@@ -14,7 +14,7 @@ import * as fcl from "@onflow/fcl";
 import { RiGlobalLine } from "react-icons/ri";
 import styles from "../../styles/Home.module.css";
 import Head from "next/head";
-import { signWithPassKey } from "../../utils/sign";
+import { signWithKey } from "../../utils/sign";
 
 const Authz = () => {
   const { store } = useContext(StoreContext);
@@ -36,7 +36,7 @@ const Authz = () => {
       f_vsn: "1.0.0",
       addr: store.address,
       network: store.network,
-      signature: await signWithPassKey(store, authzInfo.body.message)
+      signature: await signWithKey(store, authzInfo.body.message)
     });
   };
 

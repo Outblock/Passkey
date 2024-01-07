@@ -16,7 +16,7 @@ import * as fcl from "@onflow/fcl";
 import { RiGlobalLine } from "react-icons/ri";
 import { FaCircleCheck } from "react-icons/fa6";
 import { encode } from "@onflow/rlp"
-import { signAcctProofWithPassKey, signWithPassKey } from "../utils/sign";
+import { signAcctProofWithPassKey, signWithKey } from "../utils/sign";
 
 const Connect = ({ address }) => {
   const { store, setStore } = useContext(StoreContext);
@@ -70,7 +70,7 @@ const Connect = ({ address }) => {
             endpoint: `${window.location.origin}/authz`,
             f_type: "Service",
             f_vsn: "1.0.0",
-            identity: { address: store.address, keyId: 0 },
+            identity: { address: store.address, keyId: store.keyInfo.keyIndex },
             method: "POP/RPC",
             network: store.network,
             type: "authz",
@@ -87,7 +87,7 @@ const Connect = ({ address }) => {
             uid: "fpk#pre-authz",
             params: {
               address: store.address, 
-              keyId: 0 
+              keyId: store.keyInfo.keyIndex
             }
           },
           {
@@ -105,7 +105,7 @@ const Connect = ({ address }) => {
     if (authnInfo.body?.nonce && authnInfo.body?.appIdentifier && store.id) {
         console.log('rlp ==>', store.address, authnInfo.body?.nonce, authnInfo.body?.appIdentifier)
         const combind = fcl.WalletUtils.encodeAccountProof({appIdentifier: authnInfo.body?.appIdentifier, address: store.address, nonce: authnInfo.body?.nonce})
-        const signature = await signWithPassKey(store, combind)
+        const signature = await signWithKey(store, combind)
         response.services.push(
             {
                 endpoint: `${window.location.origin}/acct-proof`,
@@ -125,7 +125,7 @@ const Connect = ({ address }) => {
                         f_type: "CompositeSignature",
                         f_vsn: "1.0.0",
                         addr: store.address,
-                        keyId: 0,
+                        keyId: store.keyInfo.keyIndex,
                         signature: signature
                       }
                     ]

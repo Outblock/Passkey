@@ -13,4 +13,6 @@ export default function fclConfig() {
         .put("accessNode.api", "https://rest-testnet.onflow.org")
         .put("sdk.transport", httpSend)
     }
+
+    return fcl
 }

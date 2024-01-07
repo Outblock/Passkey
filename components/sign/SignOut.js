@@ -16,6 +16,7 @@ import * as fcl from "@onflow/fcl";
 import { RiGlobalLine } from "react-icons/ri";
 import { FaCircleCheck } from "react-icons/fa6";
 import { encode } from "@onflow/rlp";
+import { signOut } from "../../account";
 
 const SignOut = ({ isOpen, onOpen, onOpenChange }) => {
   const { store, setStore } = useContext(StoreContext);
@@ -56,7 +57,7 @@ const SignOut = ({ isOpen, onOpen, onOpenChange }) => {
                 className="w-full h-12"
                 onPress={async () => {
                   setStore({});
-                  window.localStorage.removeItem("store");
+                  signOut();
                   onClose();
                 }}
               >

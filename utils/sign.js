@@ -1,7 +1,8 @@
 import { initWasm } from "@trustwallet/wallet-core";
-import { FLOW_BIP44_PATH } from "./constants";
+import { FLOW_BIP44_PATH, HASH_ALGO, SIGN_ALGO } from "./constants";
 import { getPKfromLogin, getPasskey } from "./passkey";
 import { sha256 } from "../modules/Crypto";
+import { isEnableBiometric } from "../account";
 
 const DOMAIN_TAG = {
     tx: "FLOW-V0.0-transaction",
@@ -22,14 +23,31 @@ const domainTag = (tag) => {
     ).toString("hex")
 }
 
+const signWithKey = async (store, message) => {
+    // PassKey
+    if(!store.keyInfo) {
+        return await signWithPassKey(store, message)
+    }
+
+    // Other key
+    const { HDWallet, Curve, Hash, PrivateKey } = await initWasm();
+    const messageData = Buffer.from(message, 'hex')
+    const {signAlgo, hashAlgo, pk} = store.keyInfo
+    console.log(signAlgo, hashAlgo, pk)
+    const privateKey = PrivateKey.createWithData(Buffer.from(pk, 'hex'))
+    const curve = signAlgo === SIGN_ALGO.P256 ? Curve.nist256p1 : Curve.secp256k1
+    const messageHash = hashAlgo === HASH_ALGO.SHA3_256 ? Hash.sha3_256(messageData) : Hash.sha256(messageData)
+    const signature = privateKey.sign(messageHash, curve)
+    return Buffer.from(signature.subarray(0, signature.length - 1)).toString('hex')
+}
+
 const signWithPassKey = async (store, message) => {
     console.log('signWithPassKey ===>', store)
-    const enableBiometric = Boolean(window.localStorage.getItem('enableBiometric'))
-    const { HDWallet, Curve } = await initWasm();
+    const { HDWallet, Curve, Hash } = await initWasm();
     const id = store.id
     let wallet;
 
-    if (enableBiometric === 'true') {
+    if (isEnableBiometric) {
         const result = await getPasskey(id || "");
         wallet = HDWallet.createWithEntropy(result.response.userHandle, "")
     } else {
@@ -49,11 +67,11 @@ const signWithPassKey = async (store, message) => {
 }
 
 const signUserMsgWithPassKey = async (store, message) => {
-    return await signWithPassKey(store, domainTag(DOMAIN_TAG.user) + message)
+    return await signWithKey(store, domainTag(DOMAIN_TAG.user) + message)
 }
 
 const signAcctProofWithPassKey = async (id, message) => {
-    return await signWithPassKey(id, domainTag(DOMAIN_TAG.acct) + message)
+    return await signWithKey(id, domainTag(DOMAIN_TAG.acct) + message)
 }
 
-export {signWithPassKey, signUserMsgWithPassKey, signAcctProofWithPassKey};
+export {signWithPassKey, signUserMsgWithPassKey, signAcctProofWithPassKey, signWithKey};

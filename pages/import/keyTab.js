@@ -11,13 +11,13 @@ import PrivateKeyImport from "./privateKeyImport";
 export const KEY_TAB = [
     {
         id: "drive",
-        name: "Drive",
+        name: "FRW",
         icon: <FaGoogleDrive/>,
         node: <GoogleDriveImport/>
     },
     {
         id: "json",
-        name: "JSON",
+        name: "Keystore",
         icon: <LuFileJson/>,
         node: <JsonImport/>
     },

@@ -1,14 +1,6 @@
-import {
-  FaHashtag,
-} from "react-icons/fa6";
+import { FaHashtag } from "react-icons/fa6";
 import { TbMathMax } from "react-icons/tb";
-import {
-  Snippet,
-  Card,
-  CardBody,
-  Code,
-  Chip,
-} from "@nextui-org/react";
+import { Snippet, Card, CardBody, Code, Chip } from "@nextui-org/react";
 import { useContext, useEffect, useState } from "react";
 import { StoreContext } from "../../contexts";
 import { getPasskey, getPKfromLogin } from "../../utils/passkey";
@@ -21,10 +13,13 @@ const KeyInfoCard = () => {
 
   useEffect(() => {
     const fetchKeyInfo = async () => {
-        console.log("fetchKeyInfo ==>", store.id)
-      const result = await getPasskey(store.id || "");
-      const keyInfo = await getPKfromLogin(result);
-      setKeyInfo(keyInfo);
+      if (store.keyInfo) {
+        setKeyInfo(store.keyInfo);
+      } else {
+        const result = await getPasskey(store.id || "");
+        const keyInfo = await getPKfromLogin(result);
+        setKeyInfo(keyInfo);
+      }
     };
 
     fetchKeyInfo();
@@ -48,17 +43,21 @@ const KeyInfoCard = () => {
             </div>
           )} */}
 
-            <h6> Mnemonic </h6>
-            <div className="col-span-3">
-              <Code className="whitespace-normal">{keyInfo.mnemonic}</Code>
-            </div>
+            {keyInfo.mnemonic && <h6> Mnemonic </h6>}
+            {keyInfo.mnemonic && (
+              <div className="col-span-3">
+                <Code className="whitespace-normal">{keyInfo.mnemonic}</Code>
+              </div>
+            )}
 
-            <h6> BIP44 Path </h6>
-            <div className="col-span-3">
-              <Code className="whitespace-normal w-full">
-                {FLOW_BIP44_PATH}
-              </Code>
-            </div>
+            {keyInfo.mnemonic && <h6> BIP44 Path </h6>}
+            {keyInfo.mnemonic && (
+              <div className="col-span-3">
+                <Code className="whitespace-normal w-full">
+                  {FLOW_BIP44_PATH}
+                </Code>
+              </div>
+            )}
 
             <h6> Private Key </h6>
             <div className="col-span-3 place-self-auto h-auto min-h-fit">
@@ -73,11 +72,11 @@ const KeyInfoCard = () => {
             <div className="col-span-4 justify-self-end">
               <div className="flex justify-self-end gap-4">
                 <Chip startContent={<TbMathMax />} variant="faded">
-                  Secp256r1
+                  {keyInfo.signAlgo}
                 </Chip>
 
                 <Chip startContent={<FaHashtag />} variant="faded">
-                  SHA-256
+                {keyInfo.hashAlgo}
                 </Chip>
               </div>
             </div>

@@ -2,21 +2,18 @@ import { useEffect, useState } from 'react';
 import '../styles/globals.css'
 import { NextUIProvider } from '@nextui-org/react'
 import { StoreContext } from '../contexts'
+import fclConfig from '../utils/config';
+import { load } from '../account';
 
 function MyApp({ Component, pageProps }) {
   const [store, setStore] = useState({network: process.env.network})
 
   useEffect(() => {
-    console.log("cache 11 ==>")
-    const cache = window.localStorage.getItem('store')
-    const object = JSON.parse(cache)
-    console.log("cache ==>", object)
+    fclConfig()
+    const cache = load()
+    console.log("cache ==>", cache)
     if (cache) {
-      setStore(object)
-    }
-
-    if (window.localStorage.getItem('enableBiometric') == null) {
-      window.localStorage.setItem('enableBiometric', true)
+      setStore(cache)
     }
   }, [])
 

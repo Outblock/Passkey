@@ -7,7 +7,27 @@ import {
 import { decodeArray, encodeArray } from "../modules/base64";
 import { initWasm } from "@trustwallet/wallet-core";
 import { addCredential, readSettings } from "../modules/settings";
-import { FLOW_BIP44_PATH } from "./constants";
+import { FLOW_BIP44_PATH, HASH_ALGO, KEY_TYPE, SIGN_ALGO } from "./constants";
+
+const jsonToKey = async (json, password) => {
+  const { PrivateKey } = await initWasm();
+  console.log('jsonToKey ==>', json, password);
+  const keystore = StoredKey.importJSON(json)
+  const privateKeyData = await keystore.decryptPrivateKey(password)
+  console.log('privateKeyData ==>', privateKeyData);
+  const privateKey = PrivateKey.createWithData(privateKeyData)
+  const publicKey = privateKey.getPublicKeySecp256k1(false)
+  console.log('publicKey ==>', publicKey);
+  return privateKey
+}
+
+const pk2PubKey = async (pk) => {
+  const { PrivateKey } = await initWasm();
+  const privateKey = PrivateKey.createWithData(Buffer.from(pk, 'hex'))
+  const p256PubK = Buffer.from(privateKey.getPublicKeyNist256p1().uncompressed().data()).toString('hex').replace(/^04/, "")
+  const secp256PubK = Buffer.from(privateKey.getPublicKeySecp256k1(false).data()).toString('hex').replace(/^04/, "")
+  return {P256: p256PubK, SECP256K1: secp256PubK}
+}
 
 const createPasskey = async (name, displayName) => {
   const userId = getRandomBytes(16);
@@ -76,7 +96,7 @@ const getPasskey = async (id) => {
 };
 
 const getPKfromLogin = async (result) => {
-  const { HDWallet, Curve } = await initWasm();
+  const { HDWallet, Curve} = await initWasm();
   const wallet = HDWallet.createWithEntropy(result.response.userHandle, "");
   const pk = wallet.getKeyByCurve(Curve.nist256p1, FLOW_BIP44_PATH);
   const pubk = pk.getPublicKeyNist256p1().uncompressed().data();
@@ -84,9 +104,14 @@ const getPKfromLogin = async (result) => {
   
   return {
     mnemonic: wallet.mnemonic(),
+    type: KEY_TYPE.PASSKEY,
     pk: uint8Array2Hex(pk.data()),
     pubK: uint8Array2Hex(pubk).replace(/^04/, ""),
-    clientDataJSON: json,
+    signAlgo: SIGN_ALGO.P256,
+    hashAlgo: HASH_ALGO.SHA256,
+    addtional: {
+      clientDataJSON: json,
+    }
   };
 };
 
@@ -100,9 +125,12 @@ const getPKfromRegister = async ({ userId, result }) => {
   const pk = wallet.getKeyByCurve(Curve.nist256p1, FLOW_BIP44_PATH);
   const pubk = pk.getPublicKeyNist256p1().uncompressed().data();
   return {
+    type: KEY_TYPE.PASSKEY,
     mnemonic: wallet.mnemonic(),
     pk: uint8Array2Hex(pk.data()),
     pubK: uint8Array2Hex(pubk).replace(/^04/, ""),
+    signAlgo: SIGN_ALGO.P256,
+    hashAlgo: HASH_ALGO.SHA256
   };
 };
 
@@ -111,4 +139,4 @@ const uint8Array2Hex = (input) => {
   return buffer.toString("hex");
 };
 
-export { createPasskey, getPasskey, getPKfromLogin, getPKfromRegister };
+export { createPasskey, getPasskey, getPKfromLogin, getPKfromRegister, jsonToKey, pk2PubKey };
