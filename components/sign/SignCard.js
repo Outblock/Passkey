@@ -29,8 +29,6 @@ const SignCard = () => {
   const [loginInfo, setLoginInfo] = useState(null);
   const { store, setStore } = useContext(StoreContext);
 
-  console.log("SignCard ==>");
-
   useEffect(() => {
     const decodeLoginInfo = async () => {
       console.log("loginInfo ==>", loginInfo);
@@ -70,12 +68,12 @@ const SignCard = () => {
   useEffect(() => {
     const decodeRegisterInfo = async () => {
       const result = await getPKfromRegister(registerInfo);
-      console.log("id ===>", registerInfo.result.id);
       setStore((s) => ({
         ...s,
         keyInfo: result,
         id: registerInfo.result.id,
         username: username,
+        isCreating: true
       }));
 
       const response = await fetch("/api/createAddress", {
@@ -88,7 +86,7 @@ const SignCard = () => {
       });
       const body = await response.json();
       if (body.txId) {
-        setStore((s) => ({ ...s, txId: body.txId, isCreating: true }));
+        setStore((s) => ({ ...s, txId: body.txId}));
       }
       console.log("txId =>", body.txId);
     };

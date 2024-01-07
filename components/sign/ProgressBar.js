@@ -3,6 +3,7 @@ import { Card, CardBody, Progress, Link } from "@nextui-org/react";
 import { useContext, useEffect } from "react";
 import { StoreContext } from '../../contexts'
 import * as fcl from "@onflow/fcl";
+import { isEnableBiometric, login } from "../../account";
 
 const ProgressBar = ({txId, network}) => {
 
@@ -15,10 +16,16 @@ const ProgressBar = ({txId, network}) => {
       const result = await fcl.tx(txId).onceSealed()
       const event = result.events.filter(event => event.type === 'flow.AccountCreated')[0]
       const address = event.data.address
-      setStore((s) => ({...s, address, isCreating: false}));
       const userInfo = { ...store }
-      delete userInfo.keyInfo
-      window.localStorage.setItem('store', JSON.stringify(userInfo))
+      userInfo.address = address
+      delete userInfo.isCreating
+      delete userInfo.txId
+      if (isEnableBiometric()) {
+        delete userInfo.keyInfo.pk
+        delete userInfo.keyInfo.mnemonic
+      }
+      setStore(userInfo);
+      login(userInfo)
       return address
     };
 
