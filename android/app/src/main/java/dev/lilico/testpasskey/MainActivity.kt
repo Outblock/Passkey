@@ -26,6 +26,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.lilico.testpasskey.pages.AccountCard
 import dev.lilico.testpasskey.pages.AccountHandler
@@ -35,26 +39,34 @@ import dev.lilico.testpasskey.ui.theme.TestPasskeyTheme
 
 class MainActivity : ComponentActivity() {
 
-    private var passkey: Passkey
-    private var accountHandler: AccountHandler
+    lateinit var passkey: Passkey
+    lateinit var accountHandler: AccountHandler
 
     init {
         System.loadLibrary("TrustWalletCore")
-        passkey = Passkey(applicationContext)
-        accountHandler = AccountHandler(passkey)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        passkey = Passkey(this)
+        accountHandler = AccountHandler(passkey)
         setContent {
-            TestPasskeyTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
+            TestPasskeyTheme(darkTheme = true) {
+                ScreenMain()
+            }
+        }
+    }
+
+    @Composable
+    fun ScreenMain() {
+        val navController = rememberNavController()
+        NavHost(navController = navController, startDestination = "main") {
+            composable("main") {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     AccountCard(accountHandler)
-                    AccountInfo(accountHandler)
+                    if (accountHandler.userInfo != null) {
+                        AccountInfo(accountHandler.userInfo!!)
+                    }
                 }
             }
         }
@@ -70,7 +82,7 @@ fun GreetingPreview() {
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
             AccountCard(AccountHandler(Passkey(LocalContext.current)))
-            AccountInfo(AccountHandler(Passkey(LocalContext.current)))
+//            AccountInfo(AccountHandler(Passkey(LocalContext.current)))
         }
     }
 }

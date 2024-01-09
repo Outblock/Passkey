@@ -6,7 +6,8 @@ import {
   Input,
   Chip,
   AvatarGroup,
-  Avatar
+  Avatar,
+  Image
 } from "@nextui-org/react";
 import { StoreContext } from "../../contexts";
 import { FaKey } from "react-icons/fa6";
@@ -102,8 +103,9 @@ const SignCard = () => {
     <Card>
       <CardBody className="flex flex-col space-y-4 p-6">
         <div className="flex items-center gap-4">
-          <FaKey className="text-2xl" />
-          <h1 className="text-3xl font-bold text-gray-300">Passkey on Flow</h1>
+          {/* <FaKey className="text-2xl" /> */}
+          <Image width={50} src='./logo.svg' alt='logo' />
+          <h1 className="md:text-3xl text-lg  font-bold text-gray-300">MONO</h1>
           { process.env.network !== 'mainnet' && <Chip
             color="success"
             size="sm"
@@ -114,7 +116,7 @@ const SignCard = () => {
           </Chip>}
         </div>
         <h1 className="text-1xl text-gray-500 pb-3">
-          This is a Demo for showing the passkey on flow blockchain.
+          This is a demo for showing the passkey on flow blockchain.
         </h1>
 
         <Input

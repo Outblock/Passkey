@@ -31,32 +31,43 @@ const Import = () => {
   } = useDisclosure();
   const [importData, setImportData] = useState(null);
 
-  const handleImport = (accounts, key) => {
+  const handleImport = (accounts) => {
     onImport();
-    setImportData({ accounts, key });
+    setImportData(accounts);
   };
 
   const handleAddressSelection = (address) => {
     console.log("handleAddressSelection ==>", address);
     console.log(
       "handleAddressSelection ==>",
-      importData.accounts.filter((account) => account.address === address)[0],
-      importData.key
+      importData.filter((account) => account.address === address)[0],
+      importData
     );
-    const account = importData.accounts.filter(
+    const account = importData.filter(
       (account) => account.address === address
     )[0];
-    const key = importData.key;
+
+    const { type, keyId, sign, hash, pk, pubK, mnemonic } = account;
+
+    if (!type || !keyId || !sign || !hash || !pk || !pubK) {
+        // TODO: handle error
+        console.log("handleAddressSelection error", type, keyId, sign, hash, pk, pubK, mnemonic)
+        return
+    }
+
     const userInfo = { ...store };
-    (userInfo.address = address),
-      (userInfo.keyInfo = {
-        type: KEY_TYPE.PRIVATE_KEY,
-        keyIndex: account.keyId,
-        signAlgo: account.sign,
-        hashAlgo: account.hash,
-        pk: key.pk,
-        pubK: key.pubK,
-      });
+    userInfo.address = address
+    userInfo.keyInfo = {
+        type,
+        keyIndex: keyId,
+        signAlgo: sign,
+        hashAlgo: hash,
+        pk,
+        pubK,
+    };
+    if (mnemonic) {
+        userInfo.keyInfo.mnemonic = mnemonic
+    }
     setStore(userInfo);
     login(userInfo)
     Router.push("/");
@@ -92,7 +103,7 @@ const Import = () => {
                 onOpenChange={onOpenChange}
               />
               <ImportAddressModel
-                accounts={importData?.accounts}
+                accounts={importData}
                 handleAddressSelection={handleAddressSelection}
                 isOpen={isImport}
                 onOpen={onImport}

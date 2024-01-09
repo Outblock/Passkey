@@ -11,23 +11,65 @@ import { FLOW_BIP44_PATH, HASH_ALGO, KEY_TYPE, SIGN_ALGO } from "./constants";
 
 const jsonToKey = async (json, password) => {
   const { StoredKey, PrivateKey } = await initWasm();
-  console.log('jsonToKey ==>', json, password);
-  const keystore = StoredKey.importJSON(json)
-  const privateKeyData = await keystore.decryptPrivateKey(password)
-  console.log('privateKeyData ==>', privateKeyData);
-  const privateKey = PrivateKey.createWithData(privateKeyData)
-  const publicKey = privateKey.getPublicKeySecp256k1(false)
-  console.log('publicKey ==>', publicKey);
-  return privateKey
-}
+  console.log("jsonToKey ==>", json, password);
+  const keystore = StoredKey.importJSON(json);
+  const privateKeyData = await keystore.decryptPrivateKey(password);
+  console.log("privateKeyData ==>", privateKeyData);
+  const privateKey = PrivateKey.createWithData(privateKeyData);
+  const publicKey = privateKey.getPublicKeySecp256k1(false);
+  console.log("publicKey ==>", publicKey);
+  return privateKey;
+};
 
 const pk2PubKey = async (pk) => {
   const { PrivateKey } = await initWasm();
-  const privateKey = PrivateKey.createWithData(Buffer.from(pk, 'hex'))
-  const p256PubK = Buffer.from(privateKey.getPublicKeyNist256p1().uncompressed().data()).toString('hex').replace(/^04/, "")
-  const secp256PubK = Buffer.from(privateKey.getPublicKeySecp256k1(false).data()).toString('hex').replace(/^04/, "")
-  return {P256: p256PubK, SECP256K1: secp256PubK}
-}
+  const privateKey = PrivateKey.createWithData(Buffer.from(pk, "hex"));
+  const p256PubK = Buffer.from(
+    privateKey.getPublicKeyNist256p1().uncompressed().data()
+  )
+    .toString("hex")
+    .replace(/^04/, "");
+  const secp256PubK = Buffer.from(
+    privateKey.getPublicKeySecp256k1(false).data()
+  )
+    .toString("hex")
+    .replace(/^04/, "");
+  return {
+    P256: {
+      pubK: p256PubK,
+      pk,
+    },
+    SECP256K1: {
+      pubK: secp256PubK,
+      pk,
+    },
+  };
+};
+
+const seed2PubKey = async (seed) => {
+  const { HDWallet, Curve } = await initWasm();
+  const wallet = HDWallet.createWithMnemonic(seed, "");
+  const p256PK = wallet.getKeyByCurve(Curve.nist256p1, FLOW_BIP44_PATH);
+  const p256PubK = Buffer.from(
+    p256PK.getPublicKeyNist256p1().uncompressed().data()
+  )
+    .toString("hex")
+    .replace(/^04/, "");
+  const SECP256PK = wallet.getKeyByCurve(Curve.secp256k1, FLOW_BIP44_PATH);
+  const secp256PubK = Buffer.from(SECP256PK.getPublicKeySecp256k1(false).data())
+    .toString("hex")
+    .replace(/^04/, "");
+  return {
+    P256: {
+      pubK: p256PubK,
+      pk: Buffer.from(p256PK.data()).toString('hex'),
+    },
+    SECP256K1: {
+      pubK: secp256PubK,
+      pk: Buffer.from(SECP256PK.data()).toString('hex'),
+    },
+  }
+};
 
 const createPasskey = async (name, displayName) => {
   const userId = getRandomBytes(16);
@@ -96,12 +138,12 @@ const getPasskey = async (id) => {
 };
 
 const getPKfromLogin = async (result) => {
-  const { HDWallet, Curve} = await initWasm();
+  const { HDWallet, Curve } = await initWasm();
   const wallet = HDWallet.createWithEntropy(result.response.userHandle, "");
   const pk = wallet.getKeyByCurve(Curve.nist256p1, FLOW_BIP44_PATH);
   const pubk = pk.getPublicKeyNist256p1().uncompressed().data();
   const json = decodeClientDataJSON(result.response.clientDataJSON);
-  
+
   return {
     mnemonic: wallet.mnemonic(),
     type: KEY_TYPE.PASSKEY,
@@ -112,7 +154,7 @@ const getPKfromLogin = async (result) => {
     hashAlgo: HASH_ALGO.SHA256,
     addtional: {
       clientDataJSON: json,
-    }
+    },
   };
 };
 
@@ -132,7 +174,7 @@ const getPKfromRegister = async ({ userId, result }) => {
     pubK: uint8Array2Hex(pubk).replace(/^04/, ""),
     keyIndex: 0,
     signAlgo: SIGN_ALGO.P256,
-    hashAlgo: HASH_ALGO.SHA256
+    hashAlgo: HASH_ALGO.SHA256,
   };
 };
 
@@ -141,4 +183,12 @@ const uint8Array2Hex = (input) => {
   return buffer.toString("hex");
 };
 
-export { createPasskey, getPasskey, getPKfromLogin, getPKfromRegister, jsonToKey, pk2PubKey };
+export {
+  createPasskey,
+  getPasskey,
+  getPKfromLogin,
+  getPKfromRegister,
+  jsonToKey,
+  pk2PubKey,
+  seed2PubKey,
+};

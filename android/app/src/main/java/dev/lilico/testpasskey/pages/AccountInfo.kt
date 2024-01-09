@@ -13,6 +13,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -22,9 +24,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.lilico.testpasskey.passkey.Passkey
+import dev.lilico.testpasskey.passkey.model.AccountInfo
 
 @Composable
-fun AccountInfo(accountHandler: AccountHandler) {
+fun AccountInfo(accountInfo: AccountInfo) {
+
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier
@@ -34,14 +38,11 @@ fun AccountInfo(accountHandler: AccountHandler) {
             .background(color = Color.LightGray)
             .padding(20.dp)
     ) {
-
         Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
-
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text("Mnemonic", fontSize = 18.sp, fontWeight = FontWeight.Bold)
 
-
-                Text("Account Account Account Account Account Account Account Account Account Account Account Account",
+                Text(accountInfo.mnemonic ?: "",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal)
             }
@@ -56,8 +57,16 @@ fun AccountInfo(accountHandler: AccountHandler) {
             Divider()
 
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text("Private Key", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(accountInfo.pk, fontSize = 16.sp, fontWeight = FontWeight.Normal)
+            }
+
+            Divider()
+
+
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text("PublicKey", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                Text("0x1234567890", fontSize = 16.sp, fontWeight = FontWeight.Normal)
+                Text(accountInfo.pubKey, fontSize = 16.sp, fontWeight = FontWeight.Normal)
             }
 
             Divider()
@@ -85,7 +94,7 @@ fun AccountInfoPreview() {
         color = MaterialTheme.colorScheme.background
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
-            AccountInfo(AccountHandler(Passkey(LocalContext.current)))
+            AccountInfo(AccountHandler(Passkey(LocalContext.current)).userInfo ?: AccountInfo("AAAA", "BBBB", "CCCC"))
         }
     }
 }

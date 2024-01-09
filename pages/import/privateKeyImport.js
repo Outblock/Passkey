@@ -22,7 +22,9 @@ const PrivateKeyImport = ({ onOpen, onImport }) => {
         onOpen();
         return;
       }
-      onImport(accounts, { pk, pubK: result.pubK, type: KEY_TYPE.PRIVATE_KEY });
+      const accounts = result.map((a) => ({...a, type: KEY_TYPE.PRIVATE_KEY}))
+      console.log("accounts ==>", accounts)
+      onImport(accounts);
     } finally {
       setLoading(false);
     }
@@ -36,13 +38,13 @@ const PrivateKeyImport = ({ onOpen, onImport }) => {
     >
       <Input
         isRequired
-        // value="0x8822c99458cea9de3ba4e1d608680a8c58265ee83d99bb6e3b450a6d4c464662"
+        value="0x8822c99458cea9de3ba4e1d608680a8c58265ee83d99bb6e3b450a6d4c464662"
         type="text"
         label="Private Key"
         placeholder="Enter your private key"
       />
       <Input
-        // value="0xc2389ed351926764"
+        value="0xc2389ed351926764"
         label="Address"
         placeholder="Enter your flow address (Optional)"
         type="text"

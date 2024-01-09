@@ -28,7 +28,8 @@ export const findAddressWithKey = async (pubKeyHex, address) => {
             keyId: parseInt(key.index),
             weight: key.weight,
             hash: key.hashAlgoString,
-            sign: key.signAlgoString
+            sign: key.signAlgoString,
+            pubK: key.publicKey
         }
     })
 }
