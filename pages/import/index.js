@@ -47,7 +47,7 @@ const Import = () => {
     const account = importData.filter(
       (account) => account.address === address
     )[0];
-    
+
     const userInfo = { ...store };
     userInfo.address = address
     userInfo.keyInfo = account
@@ -59,9 +59,9 @@ const Import = () => {
   return (
     <div className={styles.container}>
       <main className={`${styles.main} dark text-foreground bg-background`}>
-        <div className="w-1/2 min-w-[calc(max(50%,400px))] max-w-[calc(min(50%,400px))] sm:w-full h-dvh py-5 flex flex-col gap-6 items-center justify-center">
+        <div className="w-1/2 min-w-[calc(max(50%,356px))] max-w-[calc(min(50%,356px))] sm:w-full h-dvh py-5 flex flex-col gap-6 items-center justify-center">
           <Card
-            className="!h-auto !transition-all"
+            className="!h-auto !transition-all max-w-full"
             style={{ transition: "all .3s ease-in-out" }}
           >
             <div className="flex flex-col w-full gap-4 px-6 pt-6 items-start">

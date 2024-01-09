@@ -2,6 +2,7 @@ import { Button, Image } from "@nextui-org/react";
 import { StoreContext } from "../../contexts";
 import { useEffect, useState, useContext } from "react";
 import { FaGoogleDrive } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 const GoogleDriveImport = ({ address }) => {
   const { store, setStore } = useContext(StoreContext);
@@ -22,6 +23,7 @@ const GoogleDriveImport = ({ address }) => {
         className="mt-3"
         startContent={<FaGoogleDrive />}
         color="success"
+        onPress={()=> toast('Coming Soon', {icon: '🚧'})}
       >
         Import from Google Drive
       </Button>

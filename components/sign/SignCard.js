@@ -22,7 +22,6 @@ import { getUsername } from "../../modules/settings";
 import { IoKeyOutline, IoChevronForwardOutline, IoChevronBackOutline, IoFingerPrintOutline} from "react-icons/io5";
 import Router from 'next/router';
 import { isEnableBiometric, login } from "../../account";
-import { toast } from 'sonner'
 
 const SignCard = () => {
   const network = process.env.network;
