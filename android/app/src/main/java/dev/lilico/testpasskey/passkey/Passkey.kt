@@ -20,6 +20,9 @@ import dev.lilico.testpasskey.passkey.model.CreatePasskeyResponseData
 import dev.lilico.testpasskey.passkey.model.GetPasskeyRequest
 import dev.lilico.testpasskey.passkey.model.UserData
 import dev.lilico.testpasskey.passkeyo.model.GetPasskeyResponseData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.security.SecureRandom
@@ -31,26 +34,30 @@ class Passkey(private val context: Context) {
     private var credentialManager = CredentialManager.create(context)
 
     suspend fun createPasskeyAccount(username: String): UserData? {
-            try {
-                val userId = generateFidoChallenge(16)
-                val response = credentialManager.createCredential(
-                    context,
-                    CreatePublicKeyCredentialRequest(getCreatePasskeyRequest(userId, username)),
-                )
-                val responseData = gson.fromJson(
-                    (response as CreatePublicKeyCredentialResponse).registrationResponseJson,
-                    CreatePasskeyResponseData::class.java
-                )
-                val attestationObject = CborDecoder.decode(responseData.response.attestationObject.b64Decode()).first()
-                val authData = (attestationObject as Map).get(UnicodeString("authData")) as ByteString
-                val publicKey = parseAuthData(authData.bytes)
-                val userData = UserData(userId, responseData.id, username, publicKey.b64Encode(), Instant.now().epochSecond)
-//                saveUserAccount(responseData.id, userData)
-                return userData
-            } catch (e: Exception) {
-                e.printStackTrace()
-                return null
-            }
+            val userId = generateFidoChallenge(16)
+
+            val test = getCreatePasskeyRequest(userId, username)
+
+            val response = credentialManager.createCredential(
+                context,
+                CreatePublicKeyCredentialRequest(test),
+            )
+            val responseData = gson.fromJson(
+                (response as CreatePublicKeyCredentialResponse).registrationResponseJson,
+                CreatePasskeyResponseData::class.java
+            )
+            val attestationObject =
+                CborDecoder.decode(responseData.response.attestationObject.b64Decode()).first()
+            val authData = (attestationObject as Map).get(UnicodeString("authData")) as ByteString
+            val publicKey = parseAuthData(authData.bytes)
+            val userData = UserData(
+                userId,
+                responseData.id,
+                username,
+                publicKey.b64Encode(),
+                Instant.now().epochSecond
+            )
+            return userData
     }
 
     private fun generateFidoChallenge(size: Int): String {

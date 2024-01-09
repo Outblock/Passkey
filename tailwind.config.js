@@ -13,7 +13,19 @@ const config = {
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: "#FF7964",
+          foreground: "#000000",
+        },
+        warning: {
+          DEFAULT: "#FFEF6A",
+          foreground: "#000000",
+        }
+        // focus: "#BEF264",
+      },
+    },
   },
   darkMode: "class",
   plugins: [nextui()]

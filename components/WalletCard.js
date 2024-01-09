@@ -11,13 +11,13 @@ import {
   Chip,
   ButtonGroup,
   CardHeader,
-  useDisclosure
+  CardFooter,
+  useDisclosure,
 } from "@nextui-org/react";
 import { StoreContext } from "../contexts";
 import { useEffect, useState, useContext } from "react";
 import { FaWallet } from "react-icons/fa";
-import { fmtFlow } from "../utils";
-import KeyInfoCard from "./KeyInfoCard";
+import KeyInfoCard from "./setting/KeyInfoCard";
 import * as fcl from "@onflow/fcl";
 import { IoExitOutline } from "react-icons/io5";
 import { LuCopy } from "react-icons/lu";
@@ -27,31 +27,17 @@ import {
   IoAddOutline,
   IoSwapHorizontalOutline,
 } from "react-icons/io5";
-import SignOut from "./SignOut";
+import SignOut from "./sign/SignOut";
+import { CustomTab } from "./tab/CustomTab";
+import Setting from "./setting/Setting";
+import TokenList from "./token/TokenList";
+import { IoCardOutline } from "react-icons/io5";
+import { isEnableBiometric } from "../account";
 
 const WalletCard = ({ address }) => {
   const { store, setStore } = useContext(StoreContext);
-  const [balance, setBalance] = useState(0.0);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-  useEffect(() => {
-    const fetchBalance = async () => {
-      try {
-        const result = await fcl.account(address);
-        console.log("fetchBalance ==>", result);
-        setBalance(result.balance);
-      } catch {
-        setBalance("Error");
-      }
-    };
-
-    if (address) {
-      fetchBalance();
-      const userInfo = { ...store };
-      delete userInfo.keyInfo;
-      window.localStorage.setItem("store", JSON.stringify(userInfo));
-    }
-  }, [address]);
+  const [selected, setSelected] = useState("Setting");
 
   return (
     <Card className="w-full h-full">
@@ -59,14 +45,6 @@ const WalletCard = ({ address }) => {
         <div className="flex items-center gap-4 w-full">
           <FaWallet className="text-2xl" />
           <h1 className="text-3xl font-bold text-gray-300">Flow Wallet</h1>
-          {/* <Chip
-            color="success"
-            size="sm"
-            variant="flat"
-            className="uppercase text-xs"
-          >
-            {store.network}
-          </Chip> */}
           <div className="grow" />
           <Tooltip showArrow={true} content="Log out" className="dark">
             <Button
@@ -93,14 +71,14 @@ const WalletCard = ({ address }) => {
               <div className="flex flex-col items-start gap-2 grow">
                 <div className="flex gap-2">
                   <h1 className="font-bold">{store.username || "Name"}</h1>
-                  <Chip
+                  {process.env.network !== "mainnet" && <Chip
                     color="success"
                     size="sm"
                     variant="flat"
                     className="uppercase text-xs"
                   >
                     {process.env.network}
-                  </Chip>
+                  </Chip>}
                 </div>
                 <h1 className="text-gray-400">{store.address}</h1>
               </div>
@@ -119,26 +97,26 @@ const WalletCard = ({ address }) => {
 
         <div className="flex items-center w-full gap-4">
           <ButtonGroup
-            radius="full"
+            // radius="full"
             className="basis-3/4 w-full grow"
             isDisabled
           >
             <Button className="w-full">
-              <IoArrowUpOutline className="text-2xl" />
+              <IoArrowUpOutline className="text-lg" />
             </Button>
             <Button className="w-full">
-              <IoSwapHorizontalOutline className="text-2xl" />
+              <IoSwapHorizontalOutline className="text-lg" />
             </Button>
             <Button className="w-full">
-              <IoArrowDownOutline className="text-2xl" />
+              <IoArrowDownOutline className="text-lg" />
             </Button>
           </ButtonGroup>
 
           <Button
             className="basis-1/4 w-full"
-            radius="full"
+            // radius="full"
             isDisabled
-            startContent={<IoAddOutline className="text-2xl" />}
+            startContent={<IoCardOutline className="text-lg" />}
           >
             Buy
           </Button>
@@ -148,31 +126,20 @@ const WalletCard = ({ address }) => {
       </CardHeader>
 
       <CardBody className="flex flex-col space-y-4 px-6">
-        <SignOut isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}/>
-        <Tabs aria-label="Options" fullWidth radius="full">
-          <Tab key="Tokens" title="Tokens">
-            <div className="flex items-center gap-4">
-              {/* <Avatar color="success" src={`https://source.boringavatars.com/marble/160/${store.address}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51`}/> */}
-              <Avatar
-                size="sm"
-                src="https://github.com/Outblock/Assets/blob/main/ft/flow/logo.png?raw=true"
-              />
-              <div className="flex flex-col gap-2">
-                <h1 className="text-1xl text-gray-300">Flow</h1>
-              </div>
-
-              <div className="flex items-center gap-1 justify-end grow">
-                <h1 className="text-1xl text-gray-300">{fmtFlow(balance)}</h1>
-                <h1 className="text-1xl text-gray-500 uppercase">Flow</h1>
-              </div>
-            </div>
+        <SignOut isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} />
+        <Tabs aria-label="Options"  selectedKey={selected} onSelectionChange={setSelected} fullWidth radius="full" className="hidden">
+          <Tab key="Token" title="Tokens" className="!mt-0 h-full py-0">
+            <TokenList/>
           </Tab>
 
-          <Tab key="Key" title="Key">
-            <KeyInfoCard />
+          <Tab key="Setting" title="Key" className="!mt-0 h-full">
+            <Setting />
           </Tab>
         </Tabs>
       </CardBody>
+      <CardFooter className="w-full">
+        <CustomTab selected={selected} setSelected={setSelected}/>
+      </CardFooter>
     </Card>
   );
 };

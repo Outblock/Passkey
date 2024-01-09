@@ -5,17 +5,24 @@ import {
   Divider,
   Input,
   Chip,
+  AvatarGroup,
+  Avatar,
+  Image
 } from "@nextui-org/react";
-import { StoreContext } from "../contexts";
+import { StoreContext } from "../../contexts";
 import { FaKey } from "react-icons/fa6";
 import {
   createPasskey,
   getPasskey,
   getPKfromLogin,
   getPKfromRegister,
-} from "../utils/passkey";
+} from "../../utils/passkey";
 import { useEffect, useState, useContext } from "react";
-import { getUsername } from "../modules/settings";
+import { getUsername } from "../../modules/settings";
+import { IoKeyOutline, IoChevronForwardOutline, IoChevronBackOutline, IoFingerPrintOutline} from "react-icons/io5";
+import Router from 'next/router';
+import { isEnableBiometric, login } from "../../account";
+import { toast } from 'sonner'
 
 const SignCard = () => {
   const network = process.env.network;
@@ -28,13 +35,6 @@ const SignCard = () => {
     const decodeLoginInfo = async () => {
       console.log("loginInfo ==>", loginInfo);
       const result = await getPKfromLogin(loginInfo);
-      // console.log("id ===>", loginInfo.id)
-
-      setStore((s) => ({
-        ...s,
-        id: loginInfo.id,
-        username: getUsername(loginInfo.id),
-      }));
 
       const response = await fetch("/api/getAddress", {
         method: "POST",
@@ -48,7 +48,17 @@ const SignCard = () => {
       const body = await response.json();
       console.log("body ==>", body);
       if (body.data && body.data.length > 0) {
-        setStore((s) => ({ ...s, address: body.data[0].address }));
+        const user = {...store}
+        user.address = body.data[0].address
+        user.id = loginInfo.id
+        user.username = getUsername(loginInfo.id)
+        if (isEnableBiometric()) {
+          delete result.pk
+          delete result.mnemonic
+        }
+        user.keyInfo = result
+        setStore(user);
+        login(user)
       }
     };
 
@@ -60,12 +70,12 @@ const SignCard = () => {
   useEffect(() => {
     const decodeRegisterInfo = async () => {
       const result = await getPKfromRegister(registerInfo);
-      console.log("id ===>", registerInfo.result.id);
       setStore((s) => ({
         ...s,
         keyInfo: result,
         id: registerInfo.result.id,
         username: username,
+        isCreating: true
       }));
 
       const response = await fetch("/api/createAddress", {
@@ -78,7 +88,7 @@ const SignCard = () => {
       });
       const body = await response.json();
       if (body.txId) {
-        setStore((s) => ({ ...s, txId: body.txId, isCreating: true }));
+        setStore((s) => ({ ...s, txId: body.txId}));
       }
       console.log("txId =>", body.txId);
     };
@@ -89,11 +99,13 @@ const SignCard = () => {
   }, [registerInfo, network]);
 
   return (
+    <div className="flex flex-col gap-4">
     <Card>
       <CardBody className="flex flex-col space-y-4 p-6">
         <div className="flex items-center gap-4">
-          <FaKey className="text-2xl" />
-          <h1 className="text-3xl font-bold text-gray-300">Passkey on Flow</h1>
+          {/* <FaKey className="text-2xl" /> */}
+          <Image width={50} src='./logo.svg' alt='logo' />
+          <h1 className="md:text-3xl text-lg  font-bold text-gray-300">MONO</h1>
           { process.env.network !== 'mainnet' && <Chip
             color="success"
             size="sm"
@@ -104,7 +116,7 @@ const SignCard = () => {
           </Chip>}
         </div>
         <h1 className="text-1xl text-gray-500 pb-3">
-          This is a Demo for showing the passkey on flow blockchain.
+          This is a demo for showing the passkey on flow blockchain.
         </h1>
 
         <Input
@@ -134,7 +146,7 @@ const SignCard = () => {
         </div>
 
         <Button
-          color="default"
+          color="warning"
           variant="solid"
           // startContent={<FaRegIdBadge />}
           onPress={async () => {
@@ -146,6 +158,23 @@ const SignCard = () => {
         </Button>
       </CardBody>
     </Card>
+    <Button className="bg-zinc-900 py-10 px-6" onPress={()=>{Router.push('/import')}}>
+      <div className="flex gap-4 w-full">
+      <div className="flex flex-col gap-2 grow items-start">
+        <p className="font-semibold text-base inline-flex items-center">Import address <IoChevronForwardOutline className="text-[#FF7964]"/> </p>
+        <p className="text-gray-500 text-sm">Support Flow Wallet, Blocto, json and raw key</p>
+      </div>
+
+      <AvatarGroup isBordered size="sm" >
+      <Avatar src="https://static.vecteezy.com/system/resources/previews/017/395/378/original/google-drive-icons-free-png.png" />
+      <Avatar src="https://github.com/Outblock/fcl-swift/blob/main/Assets/blocto/logo.jpg?raw=true" />
+      <Avatar src="https://frw-link.lilico.app/_next/image?url=%2Flogo.png&w=256&q=75" />
+    </AvatarGroup>
+
+      </div>
+      </Button>
+    </div>
+    
   );
 };
 

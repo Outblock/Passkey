@@ -16,7 +16,7 @@ import * as fcl from "@onflow/fcl";
 import { RiGlobalLine } from "react-icons/ri";
 import { FaCircleCheck } from "react-icons/fa6";
 import { encode } from "@onflow/rlp"
-import { signAcctProofWithPassKey, signWithPassKey } from "../utils/sign";
+import { signAcctProofWithPassKey, signWithKey } from "../utils/sign";
 
 const Connect = ({ address }) => {
   const { store, setStore } = useContext(StoreContext);
@@ -70,14 +70,28 @@ const Connect = ({ address }) => {
             endpoint: `${window.location.origin}/authz`,
             f_type: "Service",
             f_vsn: "1.0.0",
-            identity: { address: store.address, keyId: 0 },
+            identity: { address: store.address, keyId: store.keyInfo.keyIndex },
             method: "POP/RPC",
             network: store.network,
             type: "authz",
             uid: "fpk#authz",
           },
           {
-              endpoint: `${window.location.origin}/user-sign`,
+            endpoint: `${window.location.origin}/api/preAuthz`,
+            f_type: "Service",
+            f_vsn: "1.0.0",
+            identity: { address: process.env.payerAddress, keyId: process.env.payerKeyIndex },
+            method: "HTTP/POST",
+            network: store.network,
+            type: "pre-authz",
+            uid: "fpk#pre-authz",
+            params: {
+              address: store.address, 
+              keyId: parseInt(store.keyInfo.keyIndex)
+            }
+          },
+          {
+              endpoint: `${window.location.origin}/userSign`,
               f_type: "Service",
               f_vsn: "1.0.0",
               method: "POP/RPC",
@@ -91,7 +105,7 @@ const Connect = ({ address }) => {
     if (authnInfo.body?.nonce && authnInfo.body?.appIdentifier && store.id) {
         console.log('rlp ==>', store.address, authnInfo.body?.nonce, authnInfo.body?.appIdentifier)
         const combind = fcl.WalletUtils.encodeAccountProof({appIdentifier: authnInfo.body?.appIdentifier, address: store.address, nonce: authnInfo.body?.nonce})
-        const signature = await signWithPassKey(store.id, combind)
+        const signature = await signWithKey(store, combind)
         response.services.push(
             {
                 endpoint: `${window.location.origin}/acct-proof`,
@@ -111,7 +125,7 @@ const Connect = ({ address }) => {
                         f_type: "CompositeSignature",
                         f_vsn: "1.0.0",
                         addr: store.address,
-                        keyId: 0,
+                        keyId: parseInt(store.keyInfo.keyIndex),
                         signature: signature
                       }
                     ]

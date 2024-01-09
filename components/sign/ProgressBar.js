@@ -1,8 +1,10 @@
 import { FaRegIdBadge } from "react-icons/fa6";
 import { Card, CardBody, Progress, Link } from "@nextui-org/react";
 import { useContext, useEffect } from "react";
-import { StoreContext } from '../contexts'
+import { StoreContext } from '../../contexts'
 import * as fcl from "@onflow/fcl";
+import { isEnableBiometric, login } from "../../account";
+import Router from "next/router";
 
 const ProgressBar = ({txId, network}) => {
 
@@ -13,12 +15,22 @@ const ProgressBar = ({txId, network}) => {
   useEffect(() => {
     const waitForTx = async () => {
       const result = await fcl.tx(txId).onceSealed()
-      const event = result.events.filter(event => event.type === 'flow.AccountCreated')[0]
-      const address = event.data.address
-      setStore((s) => ({...s, address, isCreating: false}));
+      const events = result.events.filter(event => event.type === 'flow.AccountCreated')
+      if (events.length == 0) {
+        Router.push('/')
+        return
+      }
+      const address = events[0].data.address
       const userInfo = { ...store }
-      delete userInfo.keyInfo
-      window.localStorage.setItem('store', JSON.stringify(userInfo))
+      userInfo.address = address
+      delete userInfo.isCreating
+      delete userInfo.txId
+      if (isEnableBiometric()) {
+        delete userInfo.keyInfo.pk
+        delete userInfo.keyInfo.mnemonic
+      }
+      setStore(userInfo);
+      login(userInfo)
       return address
     };
 
@@ -40,11 +52,12 @@ const ProgressBar = ({txId, network}) => {
         </div>
         <Progress
           size="md"
+          color="primary"
           isIndeterminate
           aria-label="Loading..."
           className="max-w"
         />
-        <Link isExternal showAnchorIcon href={url} underline="hover" color="primary">View in FlowDiver</Link>
+        <Link isExternal showAnchorIcon href={url} underline="hover" color="warning">View in FlowDiver</Link>
       </CardBody>
     </Card>
   );

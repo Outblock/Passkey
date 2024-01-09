@@ -37,3 +37,5 @@ next-env.d.ts
 .env
 Passkey-Android/.idea
 *.xcuserstate
+.env.mainnet
+.env.testnet

@@ -1,9 +1,4 @@
-import { createContext} from 'react';
-export const StoreContext = createContext()
+import { StoreContext } from "./StoreContext";
+import { PerferenceContext } from './PerferenceContext';
 
-// import { create } from 'zustand'
-// const useStore = create((set) => ({
-//     keyInfo: null,
-//     txId: null,
-//     address: null,
-// }))
+export { StoreContext, PerferenceContext };
