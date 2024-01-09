@@ -61,12 +61,18 @@ const KeyInfoCard = () => {
 
             <h6> Private Key </h6>
             <div className="col-span-3 place-self-auto h-auto min-h-fit">
-              <Code className="whitespace-normal w-full">{keyInfo.pk}</Code>
+              <Snippet symbol="" classNames={{base: "w-full break-all dark", content: "dark bg-black", pre:["break-all", "whitespace-break-spaces"]}}>{keyInfo.pk}</Snippet>
             </div>
 
             <h6> Public Key </h6>
             <div className="col-span-3 ">
-              <Code className="whitespace-normal w-full">{keyInfo.pubK}</Code>
+              {/* <Code className="whitespace-normal w-full">{keyInfo.pubK}</Code> */}
+              <Snippet symbol="" classNames={{base: "w-full break-all dark", content: "dark bg-black", pre:["break-all", "whitespace-break-spaces"]}}>{keyInfo.pubK}</Snippet>
+            </div>
+
+            <h6> Key Index </h6>
+            <div className="col-span-3 ">
+              <Snippet symbol="" className="whitespace-normal w-full">{keyInfo.keyIndex}</Snippet>
             </div>
 
             <div className="col-span-4 justify-self-end">

@@ -11,13 +11,9 @@ import { FLOW_BIP44_PATH, HASH_ALGO, KEY_TYPE, SIGN_ALGO } from "./constants";
 
 const jsonToKey = async (json, password) => {
   const { StoredKey, PrivateKey } = await initWasm();
-  console.log("jsonToKey ==>", json, password);
   const keystore = StoredKey.importJSON(json);
   const privateKeyData = await keystore.decryptPrivateKey(password);
-  console.log("privateKeyData ==>", privateKeyData);
   const privateKey = PrivateKey.createWithData(privateKeyData);
-  const publicKey = privateKey.getPublicKeySecp256k1(false);
-  console.log("publicKey ==>", publicKey);
   return privateKey;
 };
 
@@ -62,13 +58,13 @@ const seed2PubKey = async (seed) => {
   return {
     P256: {
       pubK: p256PubK,
-      pk: Buffer.from(p256PK.data()).toString('hex'),
+      pk: Buffer.from(p256PK.data()).toString("hex"),
     },
     SECP256K1: {
       pubK: secp256PubK,
-      pk: Buffer.from(SECP256PK.data()).toString('hex'),
+      pk: Buffer.from(SECP256PK.data()).toString("hex"),
     },
-  }
+  };
 };
 
 const createPasskey = async (name, displayName) => {

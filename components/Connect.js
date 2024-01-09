@@ -91,7 +91,7 @@ const Connect = ({ address }) => {
             }
           },
           {
-              endpoint: `${window.location.origin}/user-sign`,
+              endpoint: `${window.location.origin}/userSign`,
               f_type: "Service",
               f_vsn: "1.0.0",
               method: "POP/RPC",

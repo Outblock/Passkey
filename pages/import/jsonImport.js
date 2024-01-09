@@ -4,7 +4,6 @@ import { useEffect, useState, useContext } from "react";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { jsonToKey } from "../../utils/passkey";
-import { findAddressWithKey } from "../../utils/findAddressWithPubKey";
 import { findAddressWithPK } from "../../utils/findAddressWithPK";
 import { KEY_TYPE } from "../../utils/constants";
 
@@ -57,7 +56,6 @@ const JsonImport = ({onOpen, onImport}) => {
       return false;
     }
     const result = hasJsonStructure(event);
-    console.log("result ==>", result);
     setIsInvalid(!result);
     setErrorMessage(!result ? "Not a valid json input" : "");
     return result;

@@ -36,19 +36,8 @@ import { isEnableBiometric } from "../account";
 
 const WalletCard = ({ address }) => {
   const { store, setStore } = useContext(StoreContext);
-  const [balance, setBalance] = useState(0.0);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [selected, setSelected] = useState("Setting");
-
-  useEffect(() => {
-    if (address) {
-      // const userInfo = { ...store };
-      // if (isEnableBiometric) {
-      //   delete userInfo.keyInfo;
-      // }
-      // window.localStorage.setItem("store", JSON.stringify(userInfo));
-    }
-  }, [address]);
 
   return (
     <Card className="w-full h-full">
@@ -56,14 +45,6 @@ const WalletCard = ({ address }) => {
         <div className="flex items-center gap-4 w-full">
           <FaWallet className="text-2xl" />
           <h1 className="text-3xl font-bold text-gray-300">Flow Wallet</h1>
-          {/* <Chip
-            color="success"
-            size="sm"
-            variant="flat"
-            className="uppercase text-xs"
-          >
-            {store.network}
-          </Chip> */}
           <div className="grow" />
           <Tooltip showArrow={true} content="Log out" className="dark">
             <Button
@@ -90,14 +71,14 @@ const WalletCard = ({ address }) => {
               <div className="flex flex-col items-start gap-2 grow">
                 <div className="flex gap-2">
                   <h1 className="font-bold">{store.username || "Name"}</h1>
-                  <Chip
+                  {process.env.network !== "mainnet" && <Chip
                     color="success"
                     size="sm"
                     variant="flat"
                     className="uppercase text-xs"
                   >
                     {process.env.network}
-                  </Chip>
+                  </Chip>}
                 </div>
                 <h1 className="text-gray-400">{store.address}</h1>
               </div>

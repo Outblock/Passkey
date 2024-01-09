@@ -10,7 +10,7 @@ const SeedPhraseImport = ({ onOpen, onImport }) => {
     try {
       setLoading(true);
       e.preventDefault();
-      const seed = e.target[0].value;
+      const seed = e.target[0].value.trim().split(/\s+/g).join(' ');
       const address = e.target[1].value;
       const result = await findAddressWithSeed(seed, address)
       if (!result){
@@ -32,7 +32,7 @@ const SeedPhraseImport = ({ onOpen, onImport }) => {
      fullWidth
      isRequired
       label="Seed Phrase"
-      placeholder="Import 12 or 24 seed phrase"
+      placeholder="Import 12 or 24 words split with whitespace"
       className="grow"
     />
     {/* <Input isRequired type="password" label="Password" placeholder="Enter password for json file"/> */}
