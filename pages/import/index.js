@@ -33,6 +33,7 @@ const Import = () => {
 
   const handleImport = (accounts) => {
     onImport();
+
     setImportData(accounts);
   };
 
@@ -46,28 +47,10 @@ const Import = () => {
     const account = importData.filter(
       (account) => account.address === address
     )[0];
-
-    const { type, keyId, sign, hash, pk, pubK, mnemonic } = account;
-
-    if (!type || !keyId || !sign || !hash || !pk || !pubK) {
-        // TODO: handle error
-        console.log("handleAddressSelection error", type, keyId, sign, hash, pk, pubK, mnemonic)
-        return
-    }
-
+    
     const userInfo = { ...store };
     userInfo.address = address
-    userInfo.keyInfo = {
-        type,
-        keyIndex: keyId,
-        signAlgo: sign,
-        hashAlgo: hash,
-        pk,
-        pubK,
-    };
-    if (mnemonic) {
-        userInfo.keyInfo.mnemonic = mnemonic
-    }
+    userInfo.keyInfo = account
     setStore(userInfo);
     login(userInfo)
     Router.push("/");

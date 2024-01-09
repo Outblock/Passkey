@@ -9,7 +9,6 @@ import { findAddressWithPK } from "../../utils/findAddressWithPK";
 import { KEY_TYPE } from "../../utils/constants";
 
 const JsonImport = ({onOpen, onImport}) => {
-  const { store, setStore } = useContext(StoreContext);
   const [isLoading, setLoading] = useState(false);
   const [isInvalid, setIsInvalid] = useState(false);
   const [json, setJson] = useState("")
@@ -35,16 +34,16 @@ const JsonImport = ({onOpen, onImport}) => {
       const keystore = e.target[0].value
       const password = e.target[1].value
       const address = e.target[3].value
-      console.log('address 111==>', address)
       const pk = await jsonToKey(keystore, password)
-      const pkHex = Buffer.from(pk.data(), 'hex')
+      const pkHex = Buffer.from(pk.data()).toString('hex')
       const result = await findAddressWithPK(pkHex, address)
       console.log(result)
       if (!result) {
         onOpen();
         return;
       }
-      onImport(result.accounts, { pk:pk, pubK: result.pubK, type: KEY_TYPE.KEYSTORE });
+      const accounts = result.map((a) => ({...a, type: KEY_TYPE.KEYSTORE}))
+      onImport(accounts);
     } finally {
       setLoading(false)
     }

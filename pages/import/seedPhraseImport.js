@@ -27,8 +27,8 @@ const SeedPhraseImport = ({ onOpen, onImport }) => {
   return (
     <form id="seed" onSubmit={handleImport} className="w-full flex flex-col gap-3 items-start justify-start">
     <Textarea
-    minRows={18}
-    value="edge dumb split music shell spray proof elbow vault thank swallow final"
+      minRows={18}
+      // value="edge dumb split music shell spray proof elbow vault thank swallow final"
      fullWidth
      isRequired
       label="Seed Phrase"
@@ -38,7 +38,7 @@ const SeedPhraseImport = ({ onOpen, onImport }) => {
     {/* <Input isRequired type="password" label="Password" placeholder="Enter password for json file"/> */}
     <Input
         label="Address"
-        value="0x8b8eadda2370412b"
+        // value="0x8b8eadda2370412b"
         placeholder="Enter your flow address (Optional)"
         type="text"
       />

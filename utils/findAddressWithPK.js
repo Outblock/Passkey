@@ -9,10 +9,6 @@ const findAddress = async (pubKTuple, address) => {
   const pS = sepc256k1Accounts.map((s) => ({...s, pk: SECP256K1.pk}))
   const accounts = pA.concat(pS)
 
-  // let pubK = P256
-  // if (!accounts) {
-    // pubK = SECP256K1;
-  // }
   console.log('accounts 222 ==>', accounts);
   if (!accounts || accounts.length === 0) {
       return null
@@ -21,8 +17,8 @@ const findAddress = async (pubKTuple, address) => {
 }
 
 export const findAddressWithPK = async (pk, address) => {
-    console.log("findAddressWithPK", pk, address);
     const pubKTuple = await pk2PubKey(pk);
+    console.log('pubKTuple ==>', pk, pubKTuple)
     return await findAddress(pubKTuple, address);
 }
 

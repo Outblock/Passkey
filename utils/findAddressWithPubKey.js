@@ -25,10 +25,10 @@ export const findAddressWithKey = async (pubKeyHex, address) => {
     return keys.map(key => {
         return {
             address: address,
-            keyId: parseInt(key.index),
+            keyIndex: parseInt(key.index),
             weight: key.weight,
-            hash: key.hashAlgoString,
-            sign: key.signAlgoString,
+            hashAlgo: key.hashAlgoString,
+            signAlgo: key.signAlgoString,
             pubK: key.publicKey
         }
     })
