@@ -10,7 +10,7 @@ import { addCredential, readSettings } from "../modules/settings";
 import { FLOW_BIP44_PATH, HASH_ALGO, KEY_TYPE, SIGN_ALGO } from "./constants";
 
 const jsonToKey = async (json, password) => {
-  const { PrivateKey } = await initWasm();
+  const { StoredKey, PrivateKey } = await initWasm();
   console.log('jsonToKey ==>', json, password);
   const keystore = StoredKey.importJSON(json)
   const privateKeyData = await keystore.decryptPrivateKey(password)

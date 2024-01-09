@@ -9,6 +9,8 @@ export const findAddressWithKey = async (pubKeyHex, address) => {
         return null
     }
 
+    console.log('findAddressWithKey ==>', address)
+
     const account = await fcl.account(address)
     const keys = account.keys
     .filter(key => key.publicKey === pubKeyHex && !key.revoked)

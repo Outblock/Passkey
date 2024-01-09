@@ -10,7 +10,7 @@ import { StoreContext } from "../../contexts";
 import { useEffect, useState, useContext } from "react";
 import styles from "../../styles/Home.module.css";
 import { FaKey } from "react-icons/fa6";
-import { KEY_TAB } from "./keyTab";
+import { KEY_TAB } from "../../utils/keyTab";
 import EmptyAddressModal from "./emptyAddressModal";
 import JsonImport from "./jsonImport";
 import GoogleDriveImport from "./googleDriveImport";
