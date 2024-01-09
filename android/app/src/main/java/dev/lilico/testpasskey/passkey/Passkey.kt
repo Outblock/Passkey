@@ -162,7 +162,7 @@ class Passkey(private val context: Context) {
     }
 
     companion object {
-        private const val RELYING_PARTY_ID = "passkey.lilico.dev"
+        private const val RELYING_PARTY_ID = "testnet.passkey.lilico.dev"
     }
 
 }
