@@ -121,7 +121,7 @@ const Import = () => {
                         switch (item.id) {
                           case "json":
                             return (
-                              <JsonImport onOpen={onOpen} onImport={onImport} />
+                              <JsonImport onOpen={onOpen} onImport={handleImport} />
                             );
                           case "drive":
                             return <GoogleDriveImport onOpen={onOpen} />;
@@ -129,7 +129,7 @@ const Import = () => {
                             return (
                               <SeedPhraseImport
                                 onOpen={onOpen}
-                                onImport={onImport}
+                                onImport={handleImport}
                               />
                             );
                           case "key":

@@ -6,12 +6,13 @@ import { IoMdEyeOff } from "react-icons/io";
 import { jsonToKey } from "../../utils/passkey";
 import { findAddressWithKey } from "../../utils/findAddressWithPubKey";
 import { findAddressWithPK } from "../../utils/findAddressWithPK";
+import { KEY_TYPE } from "../../utils/constants";
 
-const JsonImport = ({onOpen}) => {
+const JsonImport = ({onOpen, onImport}) => {
   const { store, setStore } = useContext(StoreContext);
   const [isLoading, setLoading] = useState(false);
   const [isInvalid, setIsInvalid] = useState(false);
-  const [json, setJson] = useState(`{"version":3,"id":"c0cae541-21f2-43f5-ab45-66c49a21a43f","address":"8cd687688f1ca87c34259a251b0f31f7dfc1bdbd","crypto":{"ciphertext":"d361ad39e8e859d309838d5017f7dc6b88e4ccf08ec5bc12f6b78fca702a8f74","cipherparams":{"iv":"c895d524bc3bcaf7d35baf43140237df"},"cipher":"aes-128-ctr","kdf":"scrypt","kdfparams":{"dklen":32,"salt":"72ace8aae80f25c56b05eede9f6654f407914dfaf5f40c2d74fb19be7e1d541a","n":131072,"r":8,"p":1},"mac":"30962d3311dc476ea9b8941a823c083dd9f149083c15e75fddbd193af0e3d261"}}`);
+  const [json, setJson] = useState("")
   const [errorMesssage, setErrorMessage] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -84,7 +85,6 @@ const JsonImport = ({onOpen}) => {
       <Input
         isRequired
         label="Password"
-        value="11111111"
         placeholder="Enter password for json file"
         endContent={
           <button

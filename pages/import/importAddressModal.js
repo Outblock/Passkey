@@ -10,6 +10,7 @@ import {
   } from "@nextui-org/react";
   
   const ImportAddressModal = ({ isOpen, onOpen, onOpenChange, accounts, handleAddressSelection }) => {
+    console.log("accounts ==>", accounts)
     const test = (e) => {
       e.preventDefault();
       handleAddressSelection(e.target[0].value)

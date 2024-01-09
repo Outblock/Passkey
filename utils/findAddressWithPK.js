@@ -16,5 +16,10 @@ export const findAddressWithPK = async (pk, address) => {
         return null
     }
 
+    //TODO: Add both account supoort
+    // const p256Accounts = await findAddressWithKey(P256, address);
+    // const secpAccounts = await findAddressWithKey(SECP256K1, address);
+    // let accounts = p256Accounts.concat(secpAccounts)
+
     return {accounts, pubK}
 }
