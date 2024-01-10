@@ -15,7 +15,7 @@ import SwiftUI
 
 struct Constant {
     static let entropyCount = 16
-    static let domain = "passkey.lilico.dev"
+    static let domain = "tesnet.passkey.lilico.dev"
     static let flowPath = "m/44'/539'/0'/0/0"
 }
 
