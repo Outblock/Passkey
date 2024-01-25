@@ -9,6 +9,7 @@ import Connect from "../components/Connect";
 import { StoreContext } from '../contexts'
 import { readSettings } from "../modules/settings";
 import { CircularProgress } from "@nextui-org/react";
+import ErrorCard from "../components/error";
 
 export default function Home() {
   const network = process.env.network;
@@ -21,6 +22,27 @@ export default function Home() {
     setLoading(false)
   }, [])
 
+
+  const render = () => {
+    if (isLoading) {
+      return <CircularProgress aria-label="Loading..." /> 
+    }
+
+    if (store.isCreating) {
+      return <ProgressBar txId={store.txId} network={network}/>
+    }
+
+    if (!store.keyInfo) {
+      return <SignCard /> 
+    }
+
+    if (store.address && store.keyInfo) {
+      return <WalletCard address={store.address} />
+    }
+
+    return <ErrorCard/>
+  }
+
   return (
     <div className={styles.container}>
         <Head>
@@ -29,10 +51,7 @@ export default function Home() {
       <main className={styles.main}>
         <div className="w-1/2 min-w-[calc(max(50%,400px))] max-w-[calc(min(50%,400px))] sm:w-full h-dvh py-5 flex flex-col gap-6 items-center justify-center">
           <Connect/>
-          { isLoading && <CircularProgress aria-label="Loading..." /> }
-          {store.address && store.keyInfo && <WalletCard address={store.address} /> }
-          {!store.keyInfo && !isLoading && <SignCard /> }
-          {store.isCreating && <ProgressBar txId={store.txId} network={network}/> }
+          {render()}
         </div>
       </main>
     </div>

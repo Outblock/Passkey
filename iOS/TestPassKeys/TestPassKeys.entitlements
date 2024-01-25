@@ -4,8 +4,8 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>webcredentials:tesnet.passkey.lilico.dev</string>
-		<string>applinks:tesnet.passkey.lilico.dev</string>
+		<string>webcredentials:testnet.passkey.lilico.dev</string>
+		<string>applinks:testnet.passkey.lilico.dev</string>
 	</array>
 </dict>
 </plist>
