@@ -11,5 +11,18 @@
             "92:A7:48:77:3B:67:BE:9F:BA:1F:AA:FC:1A:B4:CF:C8:AA:36:55:73:22:A5:2E:38:0E:9D:FC:97:E2:6D:52:AE"
         ]
       }
+    },
+    {
+      "relation" : [
+        "delegate_permission/common.handle_all_urls",
+        "delegate_permission/common.get_login_creds"
+      ],
+      "target" : {
+        "namespace" : "android_app",
+        "package_name" : "io.outblock.lilico.dev",
+        "sha256_cert_fingerprints" : [
+            "95:44:19:B4:8B:D2:14:50:AB:89:24:01:4F:0A:E0:60:55:E3:FF:BD:37:F3:73:56:69:65:6D:E8:44:5F:3D:D6"
+        ]
+      }
     }
   ]

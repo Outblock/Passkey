@@ -1,14 +1,9 @@
 {
 	"applinks": {
  		"apps": [], 
-		"details": [
-			{
-				"appID": "C7CT739SU9.io.outblock.passkey-test",
-            	"paths": [ "*" ]
-        	}
-		]
+		"details": []
 	},
 	"webcredentials": {
-		"apps": [ "C7CT739SU9.io.outblock.passkey-test" ]
+		"apps": [ "C7CT739SU9.io.outblock.passkey-test", "C7CT739SU9.io.outblock.lilico.dev" ]
 	}
 }

@@ -15,7 +15,7 @@ import SwiftUI
 
 struct Constant {
     static let entropyCount = 16
-    static let domain = "passkey.lilico.dev"
+    static let domain = "testnet.passkey.lilico.dev"
     static let flowPath = "m/44'/539'/0'/0/0"
 }
 
@@ -197,9 +197,11 @@ extension PasskeyHandler: ASAuthorizationControllerDelegate {
           print("signature ==> \(signature?.hexValue)")
 
           self.entropy = credential.userID
-
+          
           let cbor = try? CBOR.decode([UInt8](credential.rawAuthenticatorData!))
           print(cbor)
+          
+          
 
         // Take steps to verify the challenge by sending it to your server tio verify
       } else {

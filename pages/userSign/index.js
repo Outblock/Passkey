@@ -51,7 +51,7 @@ import { signUserMsgWithPassKey } from "../../utils/sign";
         </Head>
   
         <main className={styles.main}>
-        <div className="w-2/3 max-w-7xl flex flex-col gap-4">
+        <div className="w-2/3 min-w-[calc(max(80%,400px))] max-w-[calc(min(80%,400px))] sm:w-full flex flex-col gap-4">
             <Card>
               {authzInfo && (
                 <CardBody className="flex flex-col space-y-4 p-6">
